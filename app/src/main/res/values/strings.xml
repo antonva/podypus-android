@@ -2,5 +2,5 @@
     <string name="app_name">Podypus</string>
     <string name="title_home">Podcasts</string>
     <string name="title_dashboard">Search</string>
-    <string name="title_notifications">User settings</string>
+    <string name="title_notifications">Player</string>
 </resources>
