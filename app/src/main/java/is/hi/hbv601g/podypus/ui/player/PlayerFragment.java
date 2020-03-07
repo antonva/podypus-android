@@ -4,7 +4,9 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
@@ -20,6 +22,7 @@ public class PlayerFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+        System.out.print("In the on create in player");
         playerViewModel =
                 ViewModelProviders.of(this).get(PlayerViewModel.class);
         View root = inflater.inflate(R.layout.fragment_notifications, container, false);
@@ -30,6 +33,25 @@ public class PlayerFragment extends Fragment {
                 textView.setText(s);
             }
         });
+
+        /*Play button interaction*/
+        final Button playStop = (Button)root.findViewById(R.id.buttonPlayStop);
+        playStop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getActivity(), "PLaying or stopping dunno", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        /*Quit button interaction*/
+        final Button stop = (Button)root.findViewById(R.id.buttonQuit);
+        stop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getActivity(), "Stopping the audio and quiting", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         return root;
     }
 

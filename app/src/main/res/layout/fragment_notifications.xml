@@ -19,7 +19,7 @@
 
     <Button
         android:background="@drawable/stop"
-        android:id="@+id/buttonPlayStop"
+        android:id="@+id/buttonQuit"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_marginTop="320dp"
@@ -32,7 +32,7 @@
 
     <Button
         android:background="@drawable/play"
-        android:id="@+id/quitButton"
+        android:id="@+id/buttonPlayStop"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_marginRight="200dp"
