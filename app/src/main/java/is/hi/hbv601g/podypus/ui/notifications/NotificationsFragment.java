@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
-import `is`.hi.hbv601g.podypus.R;
+import is.hi.hbv601g.podypus.R;
 
 public class NotificationsFragment extends Fragment {
 
