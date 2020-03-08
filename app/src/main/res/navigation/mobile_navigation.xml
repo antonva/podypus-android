@@ -9,17 +9,26 @@
         android:id="@+id/navigation_home"
         android:name="is.hi.hbv601g.podypus.ui.home.HomeFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_navigation_home_to_searchActivity4"
+            app:destination="@id/searchActivity" />
+    </fragment>
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="is.hi.hbv601g.podypus.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:id="@+id/navigation_search"
+        android:name="is.hi.hbv601g.podypus.ui.search.SearchFragment"
+        android:label="@string/title_search"
+        tools:layout="@layout/fragment_search" />
 
     <fragment
         android:id="@+id/navigation_notifications"
         android:name="is.hi.hbv601g.podypus.ui.player.PlayerFragment"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_notifications" />
+    <activity
+        android:id="@+id/searchActivity"
+        android:name="is.hi.hbv601g.podypus.SearchActivity"
+        android:label="activity_search"
+        tools:layout="@layout/activity_search" />
 </navigation>

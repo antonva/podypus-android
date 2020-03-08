@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Podypus</string>
     <string name="title_home">Podcasts</string>
-    <string name="title_dashboard">Search</string>
+    <string name="title_search">Search</string>
     <string name="title_notifications">Player</string>
+    <string name="app_label">appLabel</string>
+    <string name="search_hint">searchHint</string>
 </resources>
