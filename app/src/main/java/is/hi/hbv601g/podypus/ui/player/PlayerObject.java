@@ -33,6 +33,18 @@ public class PlayerObject {
         mp.stop();
     }
 
+    public int getDuration(){
+        return mp.getDuration();
+    }
+
+    public void seek(int time){
+        mp.seekTo(time);
+    }
+
+    public int getCurrentPos(){
+        return mp.getCurrentPosition();
+    }
+
     //Static functions
     //Get the player object
     public static PlayerObject getInstance(){

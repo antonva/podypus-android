@@ -2,10 +2,13 @@ package is.hi.hbv601g.podypus.ui.player;
 
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,6 +24,7 @@ public class PlayerFragment extends Fragment {
 
     private PlayerViewModel playerViewModel;
     private PlayerObject player = PlayerObject.getInstance();
+    private Handler handler;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -58,6 +62,56 @@ public class PlayerFragment extends Fragment {
                 player.quitPlayback();
             }
         });
+
+        //Seekbar, time keeping purposes
+        final SeekBar timeBar= (SeekBar)root.findViewById(R.id.timeelapsed);
+        timeBar.setMax(player.getDuration());
+        timeBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if(fromUser){
+                    player.seek(progress);
+                    timeBar.setProgress(progress);
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        handler = new Handler(){
+            @Override
+            public void handleMessage(Message msg){
+                int currentPosition = msg.what;
+                //Update pos on timebar
+                timeBar.setProgress(currentPosition);
+
+            }
+        };
+
+        //Thread to continously update the position of playback(timebar)
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while(player != null){
+                    try{
+                        Message msg = new Message();
+                        msg.what = player.getCurrentPos();
+                        handler.sendMessage(msg);
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e){
+
+                    }
+                }
+            }
+        }).start();
 
         return root;
     }
