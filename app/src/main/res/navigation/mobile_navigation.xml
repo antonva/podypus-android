@@ -24,8 +24,8 @@
     <fragment
         android:id="@+id/navigation_notifications"
         android:name="is.hi.hbv601g.podypus.ui.player.PlayerFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        android:label="@string/title_player"
+        tools:layout="@layout/fragment_player" />
     <activity
         android:id="@+id/searchActivity"
         android:name="is.hi.hbv601g.podypus.SearchActivity"

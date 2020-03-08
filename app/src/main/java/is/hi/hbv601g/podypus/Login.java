@@ -12,6 +12,8 @@ import android.view.View;
 
 public class Login extends AppCompatActivity {
 
+    // TODO: Currently inactive, figure out how to enable when no user is available in DB.
+    // TODO: Remove e-mail icon in bottom right of activity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -10,7 +10,7 @@ import androidx.room.PrimaryKey;
 
 @Entity
 public class User {
-    @PrimaryKey @NonNull
+    @NonNull @PrimaryKey
     public String username;
     public String password;
 }

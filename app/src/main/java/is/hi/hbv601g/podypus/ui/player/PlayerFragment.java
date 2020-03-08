@@ -28,8 +28,8 @@ public class PlayerFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         playerViewModel =
                 ViewModelProviders.of(this).get(PlayerViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_notifications, container, false);
-        final TextView textView = root.findViewById(R.id.text_notifications);
+        View root = inflater.inflate(R.layout.fragment_player, container, false);
+        final TextView textView = root.findViewById(R.id.text_player);
         playerViewModel.getText().observe(this, new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {

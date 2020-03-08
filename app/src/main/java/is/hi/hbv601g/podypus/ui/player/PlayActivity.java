@@ -28,7 +28,7 @@ public class PlayActivity {
     public void stopStartFunction(Button button){
         if(!mp.isPlaying()) {
             mp.start();
-            button.setBackgroundResource(R.drawable.pause);
+            button.setBackgroundResource(R.drawable.stop);
         } else {
             mp.pause();
             button.setBackgroundResource(R.drawable.play);
