@@ -20,9 +20,10 @@ import is.hi.hbv601g.podypus.R;
 public class PlayerFragment extends Fragment {
 
     private PlayerViewModel playerViewModel;
-    private PlayerObject player = PlayerObject.getInstance();
+    private PlayActivity player = PlayActivity.getInstance();
     private Handler handler;
 
+    //Fragment view opener.
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         playerViewModel =
@@ -36,13 +37,14 @@ public class PlayerFragment extends Fragment {
             }
         });
 
-        //setup Player
+        //setup Player(Local mp3 only) - Replace LoadAudio R.id.queen to url for stream
+        //Currently only local
         player.loadAudio(root.getContext());
 
-        //Image placeholder
+        //Image placeholder(Currently only implemented for local)
         ImageView artWork = (ImageView)root.findViewById(R.id.artcover);
 
-        /*Play button interaction*/
+        //Play button interaction
         final Button playStop = (Button)root.findViewById(R.id.buttonPlayStop);
         playStop.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,7 +54,7 @@ public class PlayerFragment extends Fragment {
             }
         });
 
-        /*Quit button interaction*/
+        //Quit button interaction
         final Button stop = (Button)root.findViewById(R.id.buttonQuit);
         stop.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,7 +64,7 @@ public class PlayerFragment extends Fragment {
             }
         });
 
-        //Seekbar, time keeping purposes
+        //Seekbar, playback user interaction
         final SeekBar timeBar= (SeekBar)root.findViewById(R.id.timeelapsed);
         timeBar.setMax(player.getDuration());
         timeBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -73,19 +75,19 @@ public class PlayerFragment extends Fragment {
                     timeBar.setProgress(progress);
                 }
             }
-            //Not used. Function requires it to be stated.
+            //Purposely empty. SeekBar class requires it to be stated.
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
 
             }
-            //Not used, Function requires it to be stated.
+            //Purposely empty, SeekBar class requires it to be stated.
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
 
             }
         });
 
-        //Handler for updating the seekbar
+        //Handler for updating the seekbar on runtime
         handler = new Handler(){
             @Override
             public void handleMessage(Message msg){
