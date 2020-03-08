@@ -1,6 +1,5 @@
 package is.hi.hbv601g.podypus.ui.player;
 
-import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -8,16 +7,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
-
 import is.hi.hbv601g.podypus.R;
 
 public class PlayerFragment extends Fragment {
@@ -28,7 +25,6 @@ public class PlayerFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        System.out.print("In the on create in player");
         playerViewModel =
                 ViewModelProviders.of(this).get(PlayerViewModel.class);
         View root = inflater.inflate(R.layout.fragment_notifications, container, false);
@@ -43,13 +39,16 @@ public class PlayerFragment extends Fragment {
         //setup Player
         player.loadAudio(root.getContext());
 
+        //Image placeholder
+        ImageView artWork = (ImageView)root.findViewById(R.id.artcover);
+
         /*Play button interaction*/
         final Button playStop = (Button)root.findViewById(R.id.buttonPlayStop);
         playStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //Toast.makeText(getActivity(), "PLaying or stopping dunno", Toast.LENGTH_SHORT).show();
-                player.stopStartFunction();
+                player.stopStartFunction(playStop);
             }
         });
 
@@ -74,18 +73,19 @@ public class PlayerFragment extends Fragment {
                     timeBar.setProgress(progress);
                 }
             }
-
+            //Not used. Function requires it to be stated.
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
 
             }
-
+            //Not used, Function requires it to be stated.
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
 
             }
         });
 
+        //Handler for updating the seekbar
         handler = new Handler(){
             @Override
             public void handleMessage(Message msg){
@@ -115,6 +115,4 @@ public class PlayerFragment extends Fragment {
 
         return root;
     }
-
-
 }

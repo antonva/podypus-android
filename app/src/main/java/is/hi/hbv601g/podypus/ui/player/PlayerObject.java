@@ -2,8 +2,11 @@ package is.hi.hbv601g.podypus.ui.player;
 
 import android.content.Context;
 import android.media.MediaPlayer;
+import android.widget.Button;
 
 import is.hi.hbv601g.podypus.R;
+
+import static androidx.core.content.ContextCompat.startActivity;
 
 public class PlayerObject {
     private static PlayerObject instance = null;
@@ -18,19 +21,22 @@ public class PlayerObject {
         mp = MediaPlayer.create(context, R.raw.queen);
         mp.setLooping(true);
         mp.seekTo(0);
-        mp.setVolume(0.5f, 0.5f);
+        mp.setVolume(0.7f, 0.7f);
     }
 
-    public void stopStartFunction(){
+    public void stopStartFunction(Button button){
         if(!mp.isPlaying()) {
             mp.start();
+            button.setBackgroundResource(R.drawable.pause);
         } else {
             mp.pause();
+            button.setBackgroundResource(R.drawable.play);
         }
     }
 
     public void quitPlayback(){
         mp.stop();
+
     }
 
     public int getDuration(){
