@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.widget.ArrayAdapter;
+import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -16,7 +17,7 @@ import android.widget.TextView;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
-
+//Start of search activity implementation - possibly
 public class SearchActivity extends ListActivity {
 
     private static final String TAG = "SearchActivity";
@@ -33,23 +34,20 @@ public class SearchActivity extends ListActivity {
         Intent intent = getIntent();
         if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
-            searchChannel(query);
+            searchChannels(query);
         }
-        ListView list = (ListView) findViewById(R.id.searchList);
+        GridView grid = findViewById(R.id.searchList);
         Log.d(TAG, "onCreate: Started.");
 
-        //TODO: Have a list of suggestions below search box in SearchActivity
+        //TODO: Have a list of suggested podcasts below search box in SearchActivity
         ArrayList<String> suggested = new ArrayList<>();
-        suggested.add("Podcast 1");
-        suggested.add("Podcast 2");
-        suggested.add("Podcast 3");
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, suggested);
-        list.setAdapter(adapter);
+        grid.setAdapter(adapter);
     }
 
     //TODO: implement method that conducts search for podcast
-    private void searchChannel(String query) {
+    private void searchChannels(String query) {
 
     }
 
@@ -64,7 +62,7 @@ public class SearchActivity extends ListActivity {
         SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
         // Assumes current activity is the searchable activity
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
+        searchView.setIconifiedByDefault(false);
 
         return true;
     }
