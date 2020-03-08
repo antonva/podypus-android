@@ -1,5 +1,6 @@
 package is.hi.hbv601g.podypus.ui.player;
 
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,7 @@ import is.hi.hbv601g.podypus.R;
 public class PlayerFragment extends Fragment {
 
     private PlayerViewModel playerViewModel;
+    private PlayerObject player = PlayerObject.getInstance();
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -34,12 +36,16 @@ public class PlayerFragment extends Fragment {
             }
         });
 
+        //setup Player
+        player.loadAudio(root.getContext());
+
         /*Play button interaction*/
         final Button playStop = (Button)root.findViewById(R.id.buttonPlayStop);
         playStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getActivity(), "PLaying or stopping dunno", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(), "PLaying or stopping dunno", Toast.LENGTH_SHORT).show();
+                player.stopStartFunction();
             }
         });
 
@@ -48,7 +54,8 @@ public class PlayerFragment extends Fragment {
         stop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getActivity(), "Stopping the audio and quiting", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getActivity(), "Stopping the audio and quiting", Toast.LENGTH_SHORT).show();
+                player.quitPlayback();
             }
         });
 
