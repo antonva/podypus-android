@@ -30,8 +30,7 @@ public class SearchableActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_search);
 
-        /*TextView title = (TextView) findViewById(R.id.searchActivityTitle);
-        title.setText("Search");*/
+
 
         // Get the intent, verify the action and get the query
         Intent intent = getIntent();
