@@ -1,9 +1,16 @@
 package is.hi.hbv601g.podypus.ui.search;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -14,7 +21,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import is.hi.hbv601g.podypus.R;
 
-public class SearchFragment extends Fragment {
+public class SearchFragment<root> extends Fragment {
 
     private SearchViewModel searchViewModel;
 
@@ -30,6 +37,6 @@ public class SearchFragment extends Fragment {
                 textView.setText(s);
             }
         });
-        return root;
+    return root;
     }
 }

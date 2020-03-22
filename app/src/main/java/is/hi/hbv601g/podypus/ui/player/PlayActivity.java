@@ -51,7 +51,7 @@ public class PlayActivity {
         mp.seekTo(time);
     }
 
-    //Get curretn duration
+    //Get current duration
     public int getCurrentPos(){
         return mp.getCurrentPosition();
     }

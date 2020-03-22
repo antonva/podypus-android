@@ -24,22 +24,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Show navigate to different views from nav bar
         BottomNavigationView navView = findViewById(R.id.nav_view);
-        /*navView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.navigation_home:
-                        break;
-                    case R.id.navigation_search:
-                        Intent searchIntent = new Intent (MainActivity.this, SearchActivity.class);
-                        startActivity(searchIntent);
-                        break;
-                    case R.id.navigation_notifications:
-                        break;
-                }
-                return false;
-            }
-        });*/
+
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
