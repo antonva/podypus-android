@@ -15,8 +15,10 @@
 
     <!-- Authentication View strings -->
     <string name="register">Register</string>
-    <string name="registerprompt">Don't have an account?</string>
+    <string name="registerprompt">Don\'t have an account?</string>
     <string name="login">Log in</string>
+    <string name="usericondescription">User</string>
+    <string name="lockicondescription">User</string>
     <string name="user">Username</string>
     <string name="email">E-Mail</string>
     <string name="password">Password</string>

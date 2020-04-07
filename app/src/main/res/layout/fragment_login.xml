@@ -56,7 +56,7 @@
         app:layout_constraintVertical_bias="0.079" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/loginButton"
         android:layout_width="206dp"
         android:layout_height="54dp"
         android:text="@string/login"
@@ -66,4 +66,25 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/loginPassword"
         app:layout_constraintVertical_bias="0.087" />
+
+    <ImageView
+        android:id="@+id/loginLockIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/lockicondescription"
+        android:src="@drawable/ic_lock_24px"
+        app:layout_constraintBottom_toBottomOf="@+id/loginPassword"
+        app:layout_constraintEnd_toStartOf="@+id/loginPassword"
+        app:layout_constraintTop_toTopOf="@+id/loginPassword" />
+
+    <ImageView
+        android:id="@+id/loginUserIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/usericondescription"
+        android:src="@drawable/ic_person_24px"
+        app:layout_constraintBottom_toBottomOf="@+id/loginUsername"
+        app:layout_constraintEnd_toStartOf="@+id/loginUsername"
+        app:layout_constraintTop_toTopOf="@+id/loginUsername" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
