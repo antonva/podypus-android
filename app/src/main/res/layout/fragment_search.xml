@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SearchableActivity">
+    tools:context=".ui.search.SearchableActivity">
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -16,11 +16,6 @@
             android:layout_height="wrap_content"
             android:textAlignment="center"
             android:textSize="20sp"/>
-        <ListView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/lv1"
-            android:layout_below="@+id/searchView"/>
         <SearchView
             android:id="@+id/searchView"
             android:layout_width="wrap_content"
@@ -29,5 +24,15 @@
             android:queryHint="Search Here"
             android:layout_centerHorizontal="true"
             />
+        <GridView
+            android:id="@+id/gridView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:columnWidth="90dp"
+            android:gravity="center"
+            android:horizontalSpacing="10dp"
+            android:numColumns="auto_fit"
+            android:stretchMode="columnWidth"
+            android:verticalSpacing="10dp" />
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

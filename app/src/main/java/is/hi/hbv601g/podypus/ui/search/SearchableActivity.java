@@ -1,38 +1,28 @@
-package is.hi.hbv601g.podypus;
+package is.hi.hbv601g.podypus.ui.search;
 
 import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.widget.ArrayAdapter;
-import android.widget.GridView;
-import android.widget.ListView;
-import android.widget.SearchView;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.json.JSONArray;
+import com.android.volley.toolbox.JsonObjectRequest;
 
-import java.util.ArrayList;
+import org.json.JSONObject;
 
 import is.hi.hbv601g.podypus.R;
 
-//Start of search activity implementation - possibly
 public class SearchableActivity extends Activity {
 
     private String TAG = SearchableActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.println(Log.INFO,"BOOP", "onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_search);
 
@@ -43,12 +33,34 @@ public class SearchableActivity extends Activity {
             searchChannels(query);
         }
     }
+
     //TODO: implement method that conducts search for podcast
     private void searchChannels(String query) {
-        String url = "https://podypus.punk.is/";
+        Log.println(Log.INFO,"BOOP", "searchChannel");
+        String url = "https://podypus.punk.is/search";
 
         //Volley json array request object
-        JsonArrayRequest request = new JsonArrayRequest(url,
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.println(Log.INFO,"SEARCH", "Response: " + response.toString());
+                        //textView.setText("Response: " + response.toString());
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.e(TAG, "Server Error: " + error.getMessage());
+                        Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
+
+        // Access the RequestQueue through your singleton class.
+        //MySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest);
+
+        /*JsonArrayRequest request = new JsonArrayRequest(url,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
@@ -74,10 +86,8 @@ public class SearchableActivity extends Activity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e(TAG, "Server Error: " + error.getMessage());
-
                 Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
-
             }
-        });
+        });*/
     }
 }
