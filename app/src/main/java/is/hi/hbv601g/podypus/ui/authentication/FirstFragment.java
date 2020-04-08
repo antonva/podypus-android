@@ -1,24 +1,37 @@
 package is.hi.hbv601g.podypus.ui.authentication;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-
+import org.json.JSONException;
 import org.json.JSONObject;
 
-import is.hi.hbv601g.podypus.R;
 
-public class FirstFragment extends Fragment {
+import java.io.IOException;
+
+import is.hi.hbv601g.podypus.R;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
+public class FirstFragment extends Fragment implements View.OnClickListener {
+    private EditText usernameField;
+    private EditText passwordField;
+    private Button loginButton;
+    public static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
 
     @Override
     public View onCreateView(
@@ -26,32 +39,18 @@ public class FirstFragment extends Fragment {
             Bundle savedInstanceState
     ) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_login, container, false);
+        View view = inflater.inflate(R.layout.fragment_login, container, false);
+
+        usernameField = (EditText) view.findViewById(R.id.loginUsername);
+        passwordField = (EditText) view.findViewById(R.id.loginPassword);
+        loginButton = (Button) view.findViewById(R.id.loginButton);
+        loginButton.setOnClickListener(this);
+
+        return view;
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        view.findViewById(R.id.loginButton);
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String url = "https://podypus.punk.is/search";
-
-                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                        (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-                            @Override
-                            public void onResponse(JSONObject response) {
-
-                            }
-                        }, new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                // Handle errors
-                            }
-                        });
-            }
-        });
         view.findViewById(R.id.button_first).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -59,5 +58,44 @@ public class FirstFragment extends Fragment {
                         .navigate(R.id.action_FirstFragment_to_SecondFragment);
             }
         });
+    }
+
+    private Call login(final String user, final String password, Callback callback) throws JSONException, IOException {
+        String url = "https://podypus.punk.is/login";
+        JSONObject lf = new JSONObject();
+        lf.put("username",user);
+        lf.put("password",password);
+        final String reqBody = lf.toString();
+
+        OkHttpClient client = new OkHttpClient();
+        RequestBody body = RequestBody.create(reqBody,JSON);
+        Request request = new Request.Builder()
+                .url(url)
+                .post(body)
+                .build();
+        Call call = client.newCall(request);
+        call.enqueue(callback);
+        return call;
+    }
+
+    @Override
+    public void onClick(View v) {
+        try {
+            String user = usernameField.getText().toString();
+            String password = passwordField.getText().toString();
+            login(user, password, new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                     Log.println(Log.ERROR, "Login", e.toString());
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) {
+                    Log.println(Log.INFO, "Login", response.toString());
+                }
+            });
+        } catch (JSONException | IOException e) {
+            e.printStackTrace();
+        }
     }
 }
