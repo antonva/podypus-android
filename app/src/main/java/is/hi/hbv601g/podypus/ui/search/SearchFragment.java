@@ -5,29 +5,31 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.SearchView;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.IOException;
 
 import is.hi.hbv601g.podypus.R;
 
-public class SearchFragment extends Fragment {
-
+public class SearchFragment extends Fragment implements View.OnClickListener {
+    public static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
     private SearchViewModel searchViewModel;
+    private SearchView searchView = null;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -37,19 +39,19 @@ public class SearchFragment extends Fragment {
         searchViewModel =
                 ViewModelProviders.of(this).get(SearchViewModel.class);
         View root = inflater.inflate(R.layout.fragment_search, container, false);
-        final TextView textView = root.findViewById(R.id.text_search);
+        /*final TextView textView = root.findViewById(R.id.text_search);
         searchViewModel.getText().observe(this, new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);
             }
-        });
-        final SearchView searchView = root.findViewById(R.id.searchView);
+        });*/
+        searchView = root.findViewById(R.id.searchView);
+        searchView.requestFocusFromTouch();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
-                Log.println(Log.INFO,"BOOP", "query: " + query);
-                searchChannels(query);
+                onClick(searchView);
                 searchView.setQuery("", false);
                 return false;
             }
@@ -72,60 +74,45 @@ public class SearchFragment extends Fragment {
 
     return root;
     }
-    //TODO: implement method that conducts search for podcast
-    private void searchChannels(String query) {
-        Log.println(Log.INFO,"BOOP", "searchChannel");
+
+    private Call search(final String term, Callback callback) throws JSONException, IOException {
+        Log.println(Log.INFO,"BOOP", "search: " + term);
         String url = "https://podypus.punk.is/search";
+        JSONObject jo = new JSONObject();
+        jo.put("term", term);
+        final String reqBody = jo.toString();
 
-        //Volley json array request object
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+        OkHttpClient client = new OkHttpClient();
+        RequestBody body = RequestBody.create(reqBody,JSON);
+        Request request = new Request.Builder()
+                .url(url)
+                .post(body)
+                .build();
+        okhttp3.Call call = client.newCall(request);
+        call.enqueue(callback);
+        return call;
+    }
 
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.println(Log.INFO,"SEARCH", "Response: " + response.toString());
-                        //textView.setText("Response: " + response.toString());
+    @Override
+    public void onClick(View v) {
+        try {
+            String term = searchView.getQuery().toString();
+            search(term, new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    Log.println(Log.ERROR, "Search", e.toString());
+                }
+                @Override
+                public void onResponse(Call call, Response response) {
+                    Log.println(Log.INFO, "Search", response.toString());
+                    if (response.isSuccessful()) {
+                        Log.println(Log.INFO, "Search", "success!");
+                        //do stuff
                     }
-                }, new Response.ErrorListener() {
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.e("ERROR", "Server Error: " + error.getMessage());
-                        Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                });
-
-        // Access the RequestQueue through your singleton class.
-        //MySingleton.getInstance(this).addToRequestQueue(jsonObjectRequest);
-
-        /*JsonArrayRequest request = new JsonArrayRequest(url,
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        Log.d(TAG, response.toString());
-
-                        if (response.length() > 0) {
-                            //looping through json and adding to podcast list
-                            for (int i = 0; i < response.length(); i++) {
-                                try {
-                                    JSONObject podcastObj = response.getJSONObject(i);
-                                    String title = podcastObj.getString("title");
-                                    String imageURL = podcastObj.getString("imageURL");
-                                    //búa til podcast hlut og setja í lista??
-                                    //Channel c = new Channel()
-                                    //channelList.add();
-                                } catch (JSONException e) {
-                                    Log.e(TAG, "JSON Parsing error: " + e.getMessage());
-                                }
-                            }
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e(TAG, "Server Error: " + error.getMessage());
-                Toast.makeText(getApplicationContext(), error.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });*/
+                }
+            });
+        } catch (JSONException | IOException e) {
+            e.printStackTrace();
+        }
     }
 }
