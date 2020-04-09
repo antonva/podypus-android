@@ -89,8 +89,8 @@ public class FirstFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         try {
-            String user = usernameField.getText().toString();
-            String password = passwordField.getText().toString();
+            final String user = usernameField.getText().toString();
+            final String password = passwordField.getText().toString();
             login(user, password, new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
@@ -101,9 +101,10 @@ public class FirstFragment extends Fragment implements View.OnClickListener {
                 public void onResponse(Call call, Response response) throws IOException {
                     // Authentication success
                     if (response.code() == 200) {
-                        //TODO: save credentials
                         SharedPreferences.Editor spe = getActivity().getPreferences(Context.MODE_PRIVATE).edit();
                         spe.putBoolean("authenticated", true);
+                        spe.putString("username", user);
+                        spe.putString("password", password);
                         spe.commit();
                         startActivity(intent);
                     }
