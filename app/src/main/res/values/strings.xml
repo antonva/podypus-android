@@ -22,4 +22,6 @@
     <string name="user">Username</string>
     <string name="email">E-Mail</string>
     <string name="password">Password</string>
+    <string name="authenticated">false</string>
+    <string name="authenticated_default">false</string>
 </resources>

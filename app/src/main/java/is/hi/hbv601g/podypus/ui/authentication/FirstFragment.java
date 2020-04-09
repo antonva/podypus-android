@@ -1,5 +1,8 @@
 package is.hi.hbv601g.podypus.ui.authentication;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +21,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
+import is.hi.hbv601g.podypus.MainActivity;
 import is.hi.hbv601g.podypus.R;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -32,6 +36,7 @@ public class FirstFragment extends Fragment implements View.OnClickListener {
     private EditText passwordField;
     private Button loginButton;
     public static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
+    Intent intent;
 
     @Override
     public View onCreateView(
@@ -45,6 +50,9 @@ public class FirstFragment extends Fragment implements View.OnClickListener {
         passwordField = (EditText) view.findViewById(R.id.loginPassword);
         loginButton = (Button) view.findViewById(R.id.loginButton);
         loginButton.setOnClickListener(this);
+
+        // Create the intent of returning to the main activity with a successful login
+        intent = new Intent(getActivity(), MainActivity.class);
 
         return view;
     }
@@ -90,8 +98,16 @@ public class FirstFragment extends Fragment implements View.OnClickListener {
                 }
 
                 @Override
-                public void onResponse(Call call, Response response) {
-                    Log.println(Log.INFO, "Login", response.toString());
+                public void onResponse(Call call, Response response) throws IOException {
+                    // Authentication success
+                    if (response.code() == 200) {
+                        //TODO: save credentials
+                        SharedPreferences.Editor spe = getActivity().getPreferences(Context.MODE_PRIVATE).edit();
+                        spe.putBoolean("authenticated", true);
+                        spe.commit();
+                        startActivity(intent);
+                    }
+                    Log.println(Log.INFO, "Login", String.valueOf(response.code()));
                 }
             });
         } catch (JSONException | IOException e) {
