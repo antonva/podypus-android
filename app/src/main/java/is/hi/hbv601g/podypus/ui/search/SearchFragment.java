@@ -1,5 +1,8 @@
 package is.hi.hbv601g.podypus.ui.search;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,7 +13,13 @@ import android.widget.SearchView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
+
+import is.hi.hbv601g.podypus.entities.Channel;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -23,6 +32,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 import is.hi.hbv601g.podypus.R;
 
@@ -30,6 +42,11 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
     public static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
     private SearchViewModel searchViewModel;
     private SearchView searchView = null;
+    private RecyclerView recyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager layoutManager;
+
+    private List<Channel> channelData;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -39,6 +56,13 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         searchViewModel =
                 ViewModelProviders.of(this).get(SearchViewModel.class);
         View root = inflater.inflate(R.layout.fragment_search, container, false);
+        recyclerView = (RecyclerView) root.findViewById(R.id.searchChannelRecycler);
+        recyclerView.setHasFixedSize(true);
+        layoutManager = new GridLayoutManager(getActivity(), 3);
+        recyclerView.setLayoutManager(layoutManager);
+        channelData = new ArrayList<>();
+        mAdapter = new GridAdapter(channelData);
+        recyclerView.setAdapter(mAdapter);
         /*final TextView textView = root.findViewById(R.id.text_search);
         searchViewModel.getText().observe(this, new Observer<String>() {
             @Override
@@ -96,19 +120,33 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         try {
-            String term = searchView.getQuery().toString();
+            final String term = searchView.getQuery().toString();
             search(term, new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
                     Log.println(Log.ERROR, "Search", e.toString());
                 }
                 @Override
-                public void onResponse(Call call, Response response) {
+                public void onResponse(Call call, Response response) throws IOException {
                     Log.println(Log.INFO, "Search", response.toString());
                     if (response.isSuccessful()) {
-                        Log.println(Log.INFO, "Search", "success!");
-                        //do stuff
+                        //Log.println(Log.INFO, "Search", response.body().string());
+                        Gson gson = new Gson();
+                        Channel c = gson.fromJson(response.body().string(), Channel.class);
+                        //for (Channel c: channelResults) {
+                            URL imageUrl = new URL(c.imageUrl);
+                            c.image = BitmapFactory.decodeStream(imageUrl.openConnection().getInputStream());
+                            channelData.add(c);
+                            Log.println(Log.INFO, "Search", String.valueOf(c.title));
+                        //}
+                        getActivity().runOnUiThread(new Runnable(){
+                            @Override
+                            public void run() {
+                                mAdapter.notifyDataSetChanged();
+                            }
+                        });
                     }
+                    Log.println(Log.INFO, "Search", String.valueOf(response.code()));
                 }
             });
         } catch (JSONException | IOException e) {

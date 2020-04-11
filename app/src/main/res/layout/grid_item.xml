@@ -9,7 +9,7 @@
         android:layout_height="130dp"
         android:layout_width="130dp"
         android:padding="10dp"
-        android:id="@+id/ivGallery"
+        android:id="@+id/iv"
         android:src="@mipmap/ic_launcher_round"
         android:scaleType="fitXY"
         />
