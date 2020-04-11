@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="is.hi.hbv601g.podypus.ui.home.HomeFragment"
+        android:name="is.hi.hbv601g.podypus.ui.podcasts.PodcastsFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_podcasts" />
 
     <fragment
         android:id="@+id/navigation_dashboard"

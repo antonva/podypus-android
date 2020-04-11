@@ -39,7 +39,7 @@ public class PlayerFragment extends Fragment {
 
         //setup Player(Local mp3 only) - Replace LoadAudio R.id.queen to url for stream
         //Currently only local
-        player.loadAudio(root.getContext());
+        player.loadAudioLocal(root.getContext());
 
         //Image placeholder(Currently only implemented for local)
         ImageView artWork = (ImageView)root.findViewById(R.id.artcover);
