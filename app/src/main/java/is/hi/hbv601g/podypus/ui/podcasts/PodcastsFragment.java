@@ -83,6 +83,7 @@ public class PodcastsFragment extends Fragment {
                             c.image = BitmapFactory.decodeStream(imageUrl.openConnection().getInputStream());
                             myDataset.add(c);
                             Log.println(Log.INFO, "Podcasts", String.valueOf(c.title));
+                            Log.println(Log.INFO, "Podcasts", String.valueOf(c.imageUrl));
                         }
                         getActivity().runOnUiThread(new Runnable(){
                             @Override
