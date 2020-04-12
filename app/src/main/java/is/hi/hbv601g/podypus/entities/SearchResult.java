@@ -2,7 +2,12 @@ package is.hi.hbv601g.podypus.entities;
 
 import android.graphics.Bitmap;
 
-public class Channel {
+import java.util.ArrayList;
+import java.util.List;
+
+public class SearchResult {
+    public static List<SearchResult> searchResults = new ArrayList<>();
+
     public long id;
     public String title;
     public String name;

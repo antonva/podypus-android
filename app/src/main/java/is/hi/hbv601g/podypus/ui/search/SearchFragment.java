@@ -1,7 +1,5 @@
 package is.hi.hbv601g.podypus.ui.search;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,17 +7,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 
-import is.hi.hbv601g.podypus.entities.Channel;
+import is.hi.hbv601g.podypus.entities.SearchItem;
+import is.hi.hbv601g.podypus.entities.SearchResult;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -34,6 +33,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import is.hi.hbv601g.podypus.R;
@@ -46,7 +46,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
 
-    private List<Channel> channelData;
+    private List<SearchResult> searchResultData;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -57,11 +57,11 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
                 ViewModelProviders.of(this).get(SearchViewModel.class);
         View root = inflater.inflate(R.layout.fragment_search, container, false);
         recyclerView = (RecyclerView) root.findViewById(R.id.searchChannelRecycler);
-        recyclerView.setHasFixedSize(true);
+        //recyclerView.setHasFixedSize(true);
         layoutManager = new GridLayoutManager(getActivity(), 3);
         recyclerView.setLayoutManager(layoutManager);
-        channelData = new ArrayList<>();
-        mAdapter = new GridAdapter(channelData);
+        searchResultData = new ArrayList<>();
+        mAdapter = new GridAdapter(searchResultData);
         recyclerView.setAdapter(mAdapter);
         /*final TextView textView = root.findViewById(R.id.text_search);
         searchViewModel.getText().observe(this, new Observer<String>() {
@@ -132,16 +132,19 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
                     if (response.isSuccessful()) {
                         //Log.println(Log.INFO, "Search", response.body().string());
                         Gson gson = new Gson();
-                        Channel c = gson.fromJson(response.body().string(), Channel.class);
-                        //for (Channel c: channelResults) {
-                            URL imageUrl = new URL(c.imageUrl);
-                            c.image = BitmapFactory.decodeStream(imageUrl.openConnection().getInputStream());
-                            channelData.add(c);
-                            Log.println(Log.INFO, "Search", String.valueOf(c.title));
+                        SearchResult sr = gson.fromJson(response.body().string(), SearchResult.class);
+                        Log.println(Log.INFO, "Search", String.valueOf(sr.title));
+                        //List<SearchResult> results = result.searchResults;
+                        //for (SearchResult sr: result) {
+                            URL imageUrl = new URL(sr.imageUrl);
+                            sr.image = BitmapFactory.decodeStream(imageUrl.openConnection().getInputStream());
+                            searchResultData.add(sr);
+                            Log.println(Log.INFO, "Search", String.valueOf(sr.title));
                         //}
                         getActivity().runOnUiThread(new Runnable(){
                             @Override
                             public void run() {
+                                Log.println(Log.INFO, "Search", "bla");
                                 mAdapter.notifyDataSetChanged();
                             }
                         });
