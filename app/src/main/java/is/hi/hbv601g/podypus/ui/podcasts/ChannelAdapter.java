@@ -16,26 +16,39 @@ import is.hi.hbv601g.podypus.entities.Channel;
 
 class ChannelAdapter extends RecyclerView.Adapter<ChannelAdapter.ChannelViewHolder> {
     private List<Channel> mDataset;
+    private OnChannelListener mOnChannelListener;
 
-    public static class ChannelViewHolder extends RecyclerView.ViewHolder {
+    public static class ChannelViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView textView;
         public ImageView imageView;
-        public ChannelViewHolder(View v) {
+        OnChannelListener onChannelListener;
+
+        public ChannelViewHolder(View v, OnChannelListener onChannelListener) {
             super(v);
             textView = (TextView) v.findViewById(R.id.textview_name);
             imageView = (ImageView) v.findViewById(R.id.imageview_profile);
+            this.onChannelListener = onChannelListener;
+
+            textView.setOnClickListener(this);
+            imageView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            onChannelListener.onChannelClick(v, getAdapterPosition());
         }
     }
 
-    public ChannelAdapter(List<Channel> p0) {
-        mDataset = p0;
+    public ChannelAdapter(List<Channel> p0, OnChannelListener onChannelListener) {
+        this.mDataset = p0;
+        this.mOnChannelListener = onChannelListener;
     }
 
     @NonNull
     @Override
     public ChannelAdapter.ChannelViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.channel_title_view, parent, false);
-        ChannelViewHolder cvh = new ChannelViewHolder(v);
+        ChannelViewHolder cvh = new ChannelViewHolder(v, mOnChannelListener);
         return cvh;
     }
 
@@ -49,5 +62,9 @@ class ChannelAdapter extends RecyclerView.Adapter<ChannelAdapter.ChannelViewHold
     @Override
     public int getItemCount() {
         return mDataset.size();
+    }
+
+    public interface OnChannelListener {
+        void onChannelClick(View view, int position);
     }
 }
