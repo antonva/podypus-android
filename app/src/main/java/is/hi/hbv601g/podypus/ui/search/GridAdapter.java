@@ -5,6 +5,7 @@ import java.util.List;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -14,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import is.hi.hbv601g.podypus.R;
 import is.hi.hbv601g.podypus.entities.SearchItem;
-import is.hi.hbv601g.podypus.entities.SearchResult;
 
 public class GridAdapter extends RecyclerView.Adapter<GridAdapter.SearchViewHolder> {
 
@@ -27,11 +27,13 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.SearchViewHold
     public static class SearchViewHolder extends RecyclerView.ViewHolder {
         public TextView textView;
         public ImageView imageView;
+        public Button button;
         public RelativeLayout relativeLayout;
         public SearchViewHolder(View v) {
             super(v);
             textView = v.findViewById(R.id.tv);
             imageView = v.findViewById(R.id.iv);
+            button =  v.findViewById(R.id.subscribeButton);
         }
     }
 
@@ -48,6 +50,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.SearchViewHold
         SearchItem c = mDataset.get(position);
         holder.textView.setText(c.collectionName);
         holder.imageView.setImageBitmap(c.image);
+
     }
 
     @Override

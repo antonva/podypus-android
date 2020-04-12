@@ -130,11 +130,10 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
                 public void onResponse(Call call, Response response) throws IOException {
                     Log.println(Log.INFO, "Search", response.toString());
                     if (response.isSuccessful()) {
-                        //Log.println(Log.INFO, "Search", response.body().string());
                         Gson gson = new Gson();
                         SearchResult sr = gson.fromJson(response.body().string(), SearchResult.class);
                         for (SearchItem i: sr.results) {
-                            URL imageUrl = new URL(i.artworkUrl60);
+                            URL imageUrl = new URL(i.artworkUrl100);
                             i.image = BitmapFactory.decodeStream(imageUrl.openConnection().getInputStream());
                             searchResultData.add(i);
                             Log.println(Log.INFO, "Search 2", String.valueOf(i.collectionName));
@@ -142,7 +141,6 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
                         getActivity().runOnUiThread(new Runnable(){
                             @Override
                             public void run() {
-                                Log.println(Log.INFO, "Search 3", "bla");
                                 mAdapter.notifyDataSetChanged();
                             }
                         });
