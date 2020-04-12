@@ -13,13 +13,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import is.hi.hbv601g.podypus.R;
+import is.hi.hbv601g.podypus.entities.SearchItem;
 import is.hi.hbv601g.podypus.entities.SearchResult;
 
 public class GridAdapter extends RecyclerView.Adapter<GridAdapter.SearchViewHolder> {
 
-    private List<SearchResult> mDataset;
+    private List<SearchItem> mDataset;
 
-    public GridAdapter(List<SearchResult> searchResultData) {
+    public GridAdapter(List<SearchItem> searchResultData) {
         this.mDataset = searchResultData;
     }
 
@@ -44,8 +45,8 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.SearchViewHold
 
     @Override
     public void onBindViewHolder(@NonNull SearchViewHolder holder, int position) {
-        SearchResult c = mDataset.get(position);
-        holder.textView.setText(c.title);
+        SearchItem c = mDataset.get(position);
+        holder.textView.setText(c.collectionName);
         holder.imageView.setImageBitmap(c.image);
     }
 

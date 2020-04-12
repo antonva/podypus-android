@@ -46,7 +46,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
 
-    private List<SearchResult> searchResultData;
+    private List<SearchItem> searchResultData;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -133,23 +133,21 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
                         //Log.println(Log.INFO, "Search", response.body().string());
                         Gson gson = new Gson();
                         SearchResult sr = gson.fromJson(response.body().string(), SearchResult.class);
-                        Log.println(Log.INFO, "Search", String.valueOf(sr.title));
-                        //List<SearchResult> results = result.searchResults;
-                        //for (SearchResult sr: result) {
-                            URL imageUrl = new URL(sr.imageUrl);
-                            sr.image = BitmapFactory.decodeStream(imageUrl.openConnection().getInputStream());
-                            searchResultData.add(sr);
-                            Log.println(Log.INFO, "Search", String.valueOf(sr.title));
-                        //}
+                        for (SearchItem i: sr.results) {
+                            URL imageUrl = new URL(i.artworkUrl60);
+                            i.image = BitmapFactory.decodeStream(imageUrl.openConnection().getInputStream());
+                            searchResultData.add(i);
+                            Log.println(Log.INFO, "Search 2", String.valueOf(i.collectionName));
+                        }
                         getActivity().runOnUiThread(new Runnable(){
                             @Override
                             public void run() {
-                                Log.println(Log.INFO, "Search", "bla");
+                                Log.println(Log.INFO, "Search 3", "bla");
                                 mAdapter.notifyDataSetChanged();
                             }
                         });
                     }
-                    Log.println(Log.INFO, "Search", String.valueOf(response.code()));
+                    Log.println(Log.INFO, "Search 4", String.valueOf(response.code()));
                 }
             });
         } catch (JSONException | IOException e) {
