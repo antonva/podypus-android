@@ -18,7 +18,6 @@ import androidx.navigation.fragment.NavHostFragment;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-
 import java.io.IOException;
 
 import is.hi.hbv601g.podypus.MainActivity;

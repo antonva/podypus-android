@@ -1,4 +1,4 @@
-package is.hi.hbv601g.podypus.ui.podcasts;
+package is.hi.hbv601g.podypus.ui.episodes;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -11,10 +11,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,8 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import is.hi.hbv601g.podypus.R;
-import is.hi.hbv601g.podypus.entities.Channel;
-import is.hi.hbv601g.podypus.ui.episodes.EpisodeFragment;
+import is.hi.hbv601g.podypus.entities.Episode;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -39,14 +34,14 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 
-public class PodcastsFragment extends Fragment implements ChannelAdapter.OnChannelListener {
+public class EpisodeFragment extends Fragment {
 
     public static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
     private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
 
-    private List<Channel> myDataset;
+    private List<Episode> myDataset;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -57,7 +52,7 @@ public class PodcastsFragment extends Fragment implements ChannelAdapter.OnChann
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
         myDataset = new ArrayList<>();
-        mAdapter = new ChannelAdapter(myDataset, this);
+        mAdapter = new EpisodeAdapter(myDataset);
         recyclerView.setAdapter(mAdapter);
 
         SharedPreferences sp = getActivity().getPreferences(Context.MODE_PRIVATE);
@@ -66,7 +61,7 @@ public class PodcastsFragment extends Fragment implements ChannelAdapter.OnChann
             getSubscribedChannels(user, new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
-                    Log.println(Log.ERROR, "Podcasts", e.toString());
+                    Log.println(Log.ERROR, "Episodes", e.toString());
                 }
 
                 @Override
@@ -74,13 +69,13 @@ public class PodcastsFragment extends Fragment implements ChannelAdapter.OnChann
                     // Authentication success
                     if (response.code() == 200) {
                         Gson gson = new Gson();
-                        Channel[] subscribedChannels = gson.fromJson(response.body().string(), Channel[].class);
-                        for (Channel c: subscribedChannels) {
-                            URL imageUrl = new URL(c.imageUrl);
-                            c.image = BitmapFactory.decodeStream(imageUrl.openConnection().getInputStream());
+                        Episode[] subscribedChannels = gson.fromJson(response.body().string(), Episode[].class);
+                        for (Episode c: subscribedChannels) {
+                            URL imageUrl = new URL(c.image);
+                            c.bitmapImage = BitmapFactory.decodeStream(imageUrl.openConnection().getInputStream());
                             myDataset.add(c);
-                            Log.println(Log.INFO, "Podcasts", String.valueOf(c.title));
-                            Log.println(Log.INFO, "Podcasts", String.valueOf(c.imageUrl));
+                            Log.println(Log.INFO, "Episodes", String.valueOf(c.title));
+                            Log.println(Log.INFO, "Episodes", String.valueOf(c.image));
                         }
                         getActivity().runOnUiThread(new Runnable(){
                             @Override
@@ -89,7 +84,7 @@ public class PodcastsFragment extends Fragment implements ChannelAdapter.OnChann
                             }
                         });
                     }
-                    Log.println(Log.INFO, "Podcasts", String.valueOf(response.code()));
+                    Log.println(Log.INFO, "Episodes", String.valueOf(response.code()));
                 }
             });
         } catch (JSONException e) {
@@ -115,9 +110,4 @@ public class PodcastsFragment extends Fragment implements ChannelAdapter.OnChann
         return call;
     }
 
-    @Override
-    public void onChannelClick(View view, int position) {
-        NavController navController = Navigation.findNavController(view);
-        navController.navigate(R.id.episodeListrecycler);
-    }
 }
