@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.gson.Gson;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.URL;
@@ -42,6 +43,7 @@ public class EpisodeFragment extends Fragment {
     private RecyclerView.LayoutManager layoutManager;
 
     private List<Episode> myDataset;
+    long channelId;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -54,11 +56,13 @@ public class EpisodeFragment extends Fragment {
         myDataset = new ArrayList<>();
         mAdapter = new EpisodeAdapter(myDataset);
         recyclerView.setAdapter(mAdapter);
+        Bundle args = getArguments();
+        channelId = args.getLong("channelId", 0 );
 
         SharedPreferences sp = getActivity().getPreferences(Context.MODE_PRIVATE);
         String user = sp.getString("username", "demouser");
         try {
-            getSubscribedChannels(user, new Callback() {
+            getSubscribedChannels(user, channelId, new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
                     Log.println(Log.ERROR, "Episodes", e.toString());
@@ -96,10 +100,15 @@ public class EpisodeFragment extends Fragment {
         return root;
     }
 
-    private Call getSubscribedChannels(String user, Callback callback) throws JSONException, IOException {
+    private Call getSubscribedChannels(String user, long channelId, Callback callback) throws JSONException, IOException {
         String url = "https://podypus.punk.is/subscriptions";
 
         OkHttpClient client = new OkHttpClient();
+
+        JSONObject lf = new JSONObject();
+        lf.put("channel_id",channelId);
+        lf.put("username",user);
+        final String reqBody = lf.toString();
         RequestBody body = RequestBody.create(user,JSON);
         Request request = new Request.Builder()
                 .url(url)

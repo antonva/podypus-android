@@ -117,7 +117,7 @@ public class PodcastsFragment extends Fragment implements ChannelAdapter.OnChann
 
     @Override
     public void onChannelClick(View view, int position) {
-        NavController navController = Navigation.findNavController(view);
-        navController.navigate(R.id.episodeListrecycler);
+        // TODO: update MainViewModel From here
+        //TODO: Implement return to MainActivity to inflate EpisodeFragment here.
     }
 }
