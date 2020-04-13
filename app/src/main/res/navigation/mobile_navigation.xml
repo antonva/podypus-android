@@ -45,4 +45,15 @@
             app:popUpToInclusive="true"
             app:destination="@id/navigation_home" />
     </fragment>
+
+    <fragment
+        android:id="@+id/RegisterFragment"
+        android:name="is.hi.hbv601g.podypus.ui.authentication.RegisterFragment"
+        android:label="@string/second_fragment_label"
+        tools:layout="@layout/fragment_register">
+
+        <action
+            android:id="@+id/action_RegisterFragment_to_LoginFragment"
+            app:destination="@id/LoginFragment" />
+    </fragment>
 </navigation>

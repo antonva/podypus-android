@@ -56,9 +56,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
         loginButton = (Button) view.findViewById(R.id.loginButton);
         loginButton.setOnClickListener(this);
 
-        // Create the intent of returning to the main activity with a successful login
-        intent = new Intent(getActivity(), MainActivity.class);
-
         return view;
     }
 
@@ -113,7 +110,6 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                         Log.println(Log.INFO, "Login", user + " " + password);
                         spe.commit();
                         model.authenticated.postValue(true);
-                        //startActivity(intent);
                     }
                     Log.println(Log.INFO, "Login", String.valueOf(response.code()));
                 }
