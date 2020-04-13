@@ -75,6 +75,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+                searchResultData.clear();
                 onClick(searchView);
                 searchView.setQuery("", false);
                 return false;
