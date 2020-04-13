@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.authentication.FirstFragment">
+    tools:context=".ui.authentication.LoginFragment">
 
     <EditText
         android:id="@+id/loginUsername"
@@ -12,7 +12,6 @@
         android:layout_height="51dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="@string/user"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

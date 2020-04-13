@@ -2,7 +2,6 @@ package is.hi.hbv601g.podypus.ui.podcasts;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
@@ -10,10 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,8 +24,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
+import is.hi.hbv601g.podypus.MainActivityViewModel;
 import is.hi.hbv601g.podypus.R;
 import is.hi.hbv601g.podypus.entities.Channel;
 import okhttp3.Call;
@@ -37,10 +35,11 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-import static is.hi.hbv601g.podypus.ui.authentication.FirstFragment.JSON;
+import static is.hi.hbv601g.podypus.ui.authentication.LoginFragment.JSON;
 
 public class PodcastsFragment extends Fragment {
 
+    private MainActivityViewModel model;
     private PodcastViewModel podcastViewModel;
     private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
@@ -52,6 +51,7 @@ public class PodcastsFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         podcastViewModel =
                 ViewModelProviders.of(this).get(PodcastViewModel.class);
+        model = new ViewModelProvider(requireActivity()).get(MainActivityViewModel.class);
 
         View root = inflater.inflate(R.layout.fragment_podcasts, container, false);
 
@@ -65,41 +65,45 @@ public class PodcastsFragment extends Fragment {
 
         SharedPreferences sp = getActivity().getPreferences(Context.MODE_PRIVATE);
         String user = sp.getString("username", "demouser");
-        try {
-            getSubscribedChannels(user, new Callback() {
-                @Override
-                public void onFailure(Call call, IOException e) {
-                    Log.println(Log.ERROR, "Podcasts", e.toString());
-                }
-
-                @Override
-                public void onResponse(Call call, Response response) throws IOException {
-                    // Authentication success
-                    if (response.code() == 200) {
-                        Gson gson = new Gson();
-                        Channel[] subscribedChannels = gson.fromJson(response.body().string(), Channel[].class);
-                        for (Channel c: subscribedChannels) {
-                            URL imageUrl = new URL(c.imageUrl);
-                            c.image = BitmapFactory.decodeStream(imageUrl.openConnection().getInputStream());
-                            myDataset.add(c);
-                            Log.println(Log.INFO, "Podcasts", String.valueOf(c.title));
-                            Log.println(Log.INFO, "Podcasts", String.valueOf(c.imageUrl));
-                        }
-                        getActivity().runOnUiThread(new Runnable(){
-                            @Override
-                            public void run() {
-                                mAdapter.notifyDataSetChanged();
-                            }
-                        });
+        model.isAuthenticated().observe(getViewLifecycleOwner(), authenticated -> {
+            if (authenticated.booleanValue()) {
+            try {
+                getSubscribedChannels(user, new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        Log.println(Log.ERROR, "Podcasts", e.toString());
                     }
-                    Log.println(Log.INFO, "Podcasts", String.valueOf(response.code()));
-                }
-            });
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        // Authentication success
+                        if (response.code() == 200) {
+                            Gson gson = new Gson();
+                            Channel[] subscribedChannels = gson.fromJson(response.body().string(), Channel[].class);
+                            for (Channel c: subscribedChannels) {
+                                URL imageUrl = new URL(c.imageUrl);
+                                c.image = BitmapFactory.decodeStream(imageUrl.openConnection().getInputStream());
+                                myDataset.add(c);
+                                Log.println(Log.INFO, "Podcasts", String.valueOf(c.title));
+                                Log.println(Log.INFO, "Podcasts", String.valueOf(c.imageUrl));
+                            }
+                            getActivity().runOnUiThread(new Runnable(){
+                                @Override
+                                public void run() {
+                                                        mAdapter.notifyDataSetChanged();
+                                                                                        }
+                            });
+                        }
+                        Log.println(Log.INFO, "Podcasts", String.valueOf(response.code()));
+                    }
+                });
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            }
+        });
 
         return root;
     }

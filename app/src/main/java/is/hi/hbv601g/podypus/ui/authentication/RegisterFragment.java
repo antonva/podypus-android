@@ -11,7 +11,7 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import is.hi.hbv601g.podypus.R;
 
-public class SecondFragment extends Fragment {
+public class RegisterFragment extends Fragment {
 
     @Override
     public View onCreateView(
@@ -28,8 +28,8 @@ public class SecondFragment extends Fragment {
         view.findViewById(R.id.button_second).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NavHostFragment.findNavController(SecondFragment.this)
-                        .navigate(R.id.action_SecondFragment_to_FirstFragment);
+                NavHostFragment.findNavController(RegisterFragment.this)
+                        .navigate(R.id.action_RegisterFragment_to_LoginFragment);
             }
         });
     }

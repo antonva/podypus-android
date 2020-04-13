@@ -9,7 +9,14 @@
         android:id="@+id/navigation_home"
         android:name="is.hi.hbv601g.podypus.ui.podcasts.PodcastsFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_podcasts" />
+        tools:layout="@layout/fragment_podcasts" >
+
+        <action
+            android:id="@+id/action_PodcastFragment_to_LoginFragment"
+            app:popUpTo="@+id/navigation_home"
+            app:popUpToInclusive="true"
+            app:destination="@id/LoginFragment"/>
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_dashboard"
@@ -22,4 +29,20 @@
         android:name="is.hi.hbv601g.podypus.ui.player.PlayerFragment"
         android:label="@string/title_notifications"
         tools:layout="@layout/fragment_notifications" />
+
+    <fragment
+        android:id="@+id/LoginFragment"
+        android:name="is.hi.hbv601g.podypus.ui.authentication.LoginFragment"
+        android:label="@string/first_fragment_label"
+        tools:layout="@layout/fragment_login">
+
+        <action
+            android:id="@+id/action_LoginFragment_to_RegisterFragment"
+            app:destination="@id/RegisterFragment" />
+        <action
+            android:id="@+id/action_LoginFragment_to_PodcastFragment"
+            app:popUpTo="@+id/navigation_home"
+            app:popUpToInclusive="true"
+            app:destination="@id/navigation_home" />
+    </fragment>
 </navigation>

@@ -13,6 +13,8 @@ import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
 import org.json.JSONException;
@@ -22,6 +24,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 
 import is.hi.hbv601g.podypus.MainActivity;
+import is.hi.hbv601g.podypus.MainActivityViewModel;
 import is.hi.hbv601g.podypus.R;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -31,7 +34,8 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class FirstFragment extends Fragment implements View.OnClickListener {
+public class LoginFragment extends Fragment implements View.OnClickListener {
+    private MainActivityViewModel model;
     private EditText usernameField;
     private EditText passwordField;
     private Button loginButton;
@@ -46,6 +50,7 @@ public class FirstFragment extends Fragment implements View.OnClickListener {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_login, container, false);
 
+        model = new ViewModelProvider(requireActivity()).get(MainActivityViewModel.class);
         usernameField = (EditText) view.findViewById(R.id.loginUsername);
         passwordField = (EditText) view.findViewById(R.id.loginPassword);
         loginButton = (Button) view.findViewById(R.id.loginButton);
@@ -62,8 +67,8 @@ public class FirstFragment extends Fragment implements View.OnClickListener {
         view.findViewById(R.id.button_first).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NavHostFragment.findNavController(FirstFragment.this)
-                        .navigate(R.id.action_FirstFragment_to_SecondFragment);
+                NavHostFragment.findNavController(LoginFragment.this)
+                        .navigate(R.id.action_LoginFragment_to_RegisterFragment);
             }
         });
     }
@@ -100,13 +105,15 @@ public class FirstFragment extends Fragment implements View.OnClickListener {
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
                     // Authentication success
+                    Log.println(Log.INFO, "Login", user + " " + password);
                     if (response.code() == 200) {
                         SharedPreferences.Editor spe = getActivity().getPreferences(Context.MODE_PRIVATE).edit();
-                        spe.putBoolean("authenticated", true);
                         spe.putString("username", user);
                         spe.putString("password", password);
+                        Log.println(Log.INFO, "Login", user + " " + password);
                         spe.commit();
-                        startActivity(intent);
+                        model.authenticated.postValue(true);
+                        //startActivity(intent);
                     }
                     Log.println(Log.INFO, "Login", String.valueOf(response.code()));
                 }
