@@ -23,7 +23,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         Context context = this.getApplicationContext();
         SharedPreferences sp = getPreferences(Context.MODE_PRIVATE);
 

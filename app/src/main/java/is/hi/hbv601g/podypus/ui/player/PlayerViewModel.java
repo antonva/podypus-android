@@ -9,6 +9,7 @@ public class PlayerViewModel extends ViewModel {
     private MutableLiveData<String> mText;
 
     public PlayerViewModel() {
+        /*Fragment generated text sets predefined string value to screen as a string*/
         mText = new MutableLiveData<>();
         mText.setValue("This is the player");
     }
