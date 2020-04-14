@@ -46,12 +46,6 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.SearchViewHold
             textView = v.findViewById(R.id.tv);
             imageView = v.findViewById(R.id.iv);
             subscribeButton = v.findViewById(R.id.subscribeButton);
-            /*subscribeButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.println(Log.INFO, "Button", "Subscribe Button clicked " + getAdapterPosition());
-                }
-            });*/
         }
     }
 
@@ -71,7 +65,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.SearchViewHold
         holder.subscribeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.println(Log.INFO, "Button", "Subscribe Button clicked " + si.feedUrl);
+                Log.println(Log.INFO, "Button", "Subscribe Button clicked on: " + si.collectionName);
                 try {
                     postSubscription(si);
                 } catch (IOException e) {
@@ -86,21 +80,21 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.SearchViewHold
         return mDataset.size();
     }
 
-    //function that posts user's new subscriptions to server
+    //post user subscriptions to server
     private void postSubscription(SearchItem i) throws IOException {
         MediaType JSON = MediaType.get("application/json; charset=utf-8");
         String url = "https://podypus.punk.is/subscribe";
         OkHttpClient client = new OkHttpClient();
 
         JSONObject jo = new JSONObject();
-        final String reqBody = jo.toString();
-
         try {
             jo.put("username", "demouser");
             jo.put("url", i.feedUrl);
         } catch(JSONException e){
             e.printStackTrace();
         }
+        final String reqBody = jo.toString();
+
         RequestBody body = RequestBody.create(reqBody, JSON);
         Request request = new Request.Builder()
                 .url(url)

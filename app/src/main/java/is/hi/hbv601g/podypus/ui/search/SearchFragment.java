@@ -33,7 +33,6 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import is.hi.hbv601g.podypus.R;
@@ -52,24 +51,16 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        setHasOptionsMenu(true);
         searchViewModel =
                 ViewModelProviders.of(this).get(SearchViewModel.class);
         View root = inflater.inflate(R.layout.fragment_search, container, false);
         recyclerView = (RecyclerView) root.findViewById(R.id.searchChannelRecycler);
-        //recyclerView.setHasFixedSize(true);
         layoutManager = new GridLayoutManager(getActivity(), 3);
         recyclerView.setLayoutManager(layoutManager);
         searchResultData = new ArrayList<>();
         mAdapter = new GridAdapter(searchResultData);
         recyclerView.setAdapter(mAdapter);
-        /*final TextView textView = root.findViewById(R.id.text_search);
-        searchViewModel.getText().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
-            }
-        });*/
+
         searchView = root.findViewById(R.id.searchView);
         searchView.requestFocusFromTouch();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -86,16 +77,6 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
                 return false;
             }
         });
-        //TODO: get clear button on searchView to work (x-button) - currently crashes app
-        /*final ImageView closeButton = root.findViewById(R.id.search_close_btn);
-        closeButton.setOnClickListener(new SearchView.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Log.println(Log.INFO,"BOOP", "Search close button clicked");
-            }
-        });*/
-
 
     return root;
     }
@@ -129,7 +110,6 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
                 }
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
-                    Log.println(Log.INFO, "Search", response.toString());
                     if (response.isSuccessful()) {
                         Gson gson = new Gson();
                         SearchResult sr = gson.fromJson(response.body().string(), SearchResult.class);
@@ -137,7 +117,6 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
                             URL imageUrl = new URL(i.artworkUrl100);
                             i.image = BitmapFactory.decodeStream(imageUrl.openConnection().getInputStream());
                             searchResultData.add(i);
-                            Log.println(Log.INFO, "Search 2", String.valueOf(i.collectionName));
                         }
                         getActivity().runOnUiThread(new Runnable(){
                             @Override
@@ -146,7 +125,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
                             }
                         });
                     }
-                    Log.println(Log.INFO, "Search 4", String.valueOf(response.code()));
+                    Log.println(Log.INFO, "Search", String.valueOf(response.code()));
                 }
             });
         } catch (JSONException | IOException e) {
