@@ -24,6 +24,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import is.hi.hbv601g.podypus.MainActivityViewModel;
 import is.hi.hbv601g.podypus.R;
 import is.hi.hbv601g.podypus.entities.Episode;
 import okhttp3.Call;
@@ -43,7 +44,9 @@ public class EpisodeFragment extends Fragment {
     private RecyclerView.LayoutManager layoutManager;
 
     private List<Episode> myDataset;
-    long channelId;
+
+    MainActivityViewModel model;
+    long channelId = ;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {

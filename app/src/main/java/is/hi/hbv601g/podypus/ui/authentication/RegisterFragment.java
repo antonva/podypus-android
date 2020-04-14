@@ -1,7 +1,6 @@
 package is.hi.hbv601g.podypus.ui.authentication;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,29 +12,25 @@ import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 
-import is.hi.hbv601g.podypus.MainActivity;
+import is.hi.hbv601g.podypus.MainActivityViewModel;
 import is.hi.hbv601g.podypus.R;
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 
-public class FirstFragment extends Fragment implements View.OnClickListener {
-    private EditText usernameField;
+public class RegisterFragment extends Fragment implements View.OnClickListener{
+    private MainActivityViewModel model;
     private EditText passwordField;
-    private Button loginButton;
-    public static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
-    Intent intent;
+    private EditText usernameField;
+    private EditText emailField;
+    private Button registerButton;
 
     @Override
     public View onCreateView(
@@ -43,46 +38,32 @@ public class FirstFragment extends Fragment implements View.OnClickListener {
             Bundle savedInstanceState
     ) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_login, container, false);
-
-        usernameField = (EditText) view.findViewById(R.id.loginUsername);
-        passwordField = (EditText) view.findViewById(R.id.loginPassword);
-        loginButton = (Button) view.findViewById(R.id.loginButton);
-        loginButton.setOnClickListener(this);
-
-        // Create the intent of returning to the main activity with a successful login
-        intent = new Intent(getActivity(), MainActivity.class);
+        View view =  inflater.inflate(R.layout.fragment_register, container, false);
+        model = new ViewModelProvider(requireActivity()).get(MainActivityViewModel.class);
+        usernameField = (EditText) view.findViewById(R.id.registerUsername);
+        passwordField = (EditText) view.findViewById(R.id.registerPassword);
+        emailField = (EditText) view.findViewById(R.id.registerEmail);
+        registerButton = (Button) view.findViewById(R.id.loginButton);
+        registerButton.setOnClickListener(this);
 
         return view;
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        view.findViewById(R.id.button_first).setOnClickListener(new View.OnClickListener() {
+
+        view.findViewById(R.id.button_second).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NavHostFragment.findNavController(FirstFragment.this)
-                        .navigate(R.id.action_FirstFragment_to_SecondFragment);
+                NavHostFragment.findNavController(RegisterFragment.this)
+                        .navigate(R.id.action_RegisterFragment_to_LoginFragment);
             }
         });
     }
 
-    private Call login(final String user, final String password, Callback callback) throws JSONException, IOException {
-        String url = "https://podypus.punk.is/login";
-        JSONObject lf = new JSONObject();
-        lf.put("username",user);
-        lf.put("password",password);
-        final String reqBody = lf.toString();
 
-        OkHttpClient client = new OkHttpClient();
-        RequestBody body = RequestBody.create(reqBody,JSON);
-        Request request = new Request.Builder()
-                .url(url)
-                .post(body)
-                .build();
-        Call call = client.newCall(request);
-        call.enqueue(callback);
-        return call;
+    public void register(String user, String password, Callback callback) throws JSONException, IOException{
+
     }
 
     @Override
@@ -90,22 +71,23 @@ public class FirstFragment extends Fragment implements View.OnClickListener {
         try {
             final String user = usernameField.getText().toString();
             final String password = passwordField.getText().toString();
-            login(user, password, new Callback() {
+            register(user, password, new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
-                     Log.println(Log.ERROR, "Login", e.toString());
+                    Log.println(Log.ERROR, "Login", e.toString());
                 }
 
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
                     // Authentication success
+                    Log.println(Log.INFO, "Login", user + " " + password);
                     if (response.code() == 200) {
                         SharedPreferences.Editor spe = getActivity().getPreferences(Context.MODE_PRIVATE).edit();
-                        spe.putBoolean("authenticated", true);
                         spe.putString("username", user);
                         spe.putString("password", password);
+                        Log.println(Log.INFO, "Login", user + " " + password);
                         spe.commit();
-                        startActivity(intent);
+                        model.authenticated.postValue(true);
                     }
                     Log.println(Log.INFO, "Login", String.valueOf(response.code()));
                 }

@@ -12,11 +12,8 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,6 +28,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import is.hi.hbv601g.podypus.MainActivity;
+import is.hi.hbv601g.podypus.MainActivityViewModel;
+
 import is.hi.hbv601g.podypus.MainViewModel;
 import is.hi.hbv601g.podypus.R;
 import is.hi.hbv601g.podypus.entities.Channel;
@@ -43,20 +42,27 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-
 public class PodcastsFragment extends Fragment implements ChannelAdapter.OnChannelListener {
 
+
     public static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
+
+    private MainActivityViewModel model;
+    private PodcastViewModel podcastViewModel;
+
     private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
 
     private List<Channel> myDataset;
 
-    MainViewModel model;
-
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
+
+        podcastViewModel =
+                ViewModelProviders.of(this).get(PodcastViewModel.class);
+        model = new ViewModelProvider(requireActivity()).get(MainActivityViewModel.class);
+
         View root = inflater.inflate(R.layout.fragment_podcasts, container, false);
 
         recyclerView = (RecyclerView) root.findViewById(R.id.podcastChannelRecycler);
@@ -67,46 +73,49 @@ public class PodcastsFragment extends Fragment implements ChannelAdapter.OnChann
         mAdapter = new ChannelAdapter(myDataset, this);
         recyclerView.setAdapter(mAdapter);
 
-        model = new ViewModelProvider(requireActivity()).get(MainViewModel.class);
-        Intent intent = new Intent(getActivity(), MainActivity.class);
+
 
         SharedPreferences sp = getActivity().getPreferences(Context.MODE_PRIVATE);
         String user = sp.getString("username", "demouser");
-        try {
-            getSubscribedChannels(user, new Callback() {
-                @Override
-                public void onFailure(Call call, IOException e) {
-                    Log.println(Log.ERROR, "Podcasts", e.toString());
-                }
-
-                @Override
-                public void onResponse(Call call, Response response) throws IOException {
-                    // Authentication success
-                    if (response.code() == 200) {
-                        Gson gson = new Gson();
-                        Channel[] subscribedChannels = gson.fromJson(response.body().string(), Channel[].class);
-                        for (Channel c: subscribedChannels) {
-                            URL imageUrl = new URL(c.imageUrl);
-                            c.image = BitmapFactory.decodeStream(imageUrl.openConnection().getInputStream());
-                            myDataset.add(c);
-                            Log.println(Log.INFO, "Podcasts", String.valueOf(c.title));
-                            Log.println(Log.INFO, "Podcasts", String.valueOf(c.imageUrl));
-                        }
-                        getActivity().runOnUiThread(new Runnable(){
-                            @Override
-                            public void run() {
-                                mAdapter.notifyDataSetChanged();
-                            }
-                        });
+        model.isAuthenticated().observe(getViewLifecycleOwner(), authenticated -> {
+            if (authenticated.booleanValue()) {
+            try {
+                getSubscribedChannels(user, new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        Log.println(Log.ERROR, "Podcasts", e.toString());
                     }
-                    Log.println(Log.INFO, "Podcasts", String.valueOf(response.code()));
-                }
-            });
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        // Authentication success
+                        if (response.code() == 200) {
+                            Gson gson = new Gson();
+                            Channel[] subscribedChannels = gson.fromJson(response.body().string(), Channel[].class);
+                            for (Channel c: subscribedChannels) {
+                                URL imageUrl = new URL(c.imageUrl);
+                                c.image = BitmapFactory.decodeStream(imageUrl.openConnection().getInputStream());
+                                myDataset.add(c);
+                                Log.println(Log.INFO, "Podcasts", String.valueOf(c.title));
+                                Log.println(Log.INFO, "Podcasts", String.valueOf(c.imageUrl));
+                            }
+                            getActivity().runOnUiThread(new Runnable(){
+                                @Override
+                                public void run() {
+                                                        mAdapter.notifyDataSetChanged();
+                                                                                        }
+                            });
+                        }
+                        Log.println(Log.INFO, "Podcasts", String.valueOf(response.code()));
+                    }
+                });
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            }
+        });
 
         return root;
     }
@@ -130,6 +139,7 @@ public class PodcastsFragment extends Fragment implements ChannelAdapter.OnChann
         //TODO: Implement return to MainActivity to inflate EpisodeFragment here.
         final Channel ch = myDataset.get(position);
         model.setChannelId(ch.id);
-
+        NavHostFragment.findNavController(PodcastsFragment.this)
+                .navigate(R.id.action_PodcastFragment_to_EpisodeFragment);
     }
 }
