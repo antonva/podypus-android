@@ -46,8 +46,7 @@ public class EpisodeFragment extends Fragment {
     private List<Episode> myDataset;
 
     MainActivityViewModel model;
-    long channelId = ;
-
+    long channelId;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_podcasts, container, false);

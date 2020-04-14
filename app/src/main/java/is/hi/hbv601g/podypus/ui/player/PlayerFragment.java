@@ -16,7 +16,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
-import is.hi.hbv601g.podypus.MainViewModel;
+import is.hi.hbv601g.podypus.MainActivityViewModel;
 import is.hi.hbv601g.podypus.R;
 
 public class PlayerFragment extends Fragment {
@@ -24,7 +24,7 @@ public class PlayerFragment extends Fragment {
     private PlayerViewModel playerViewModel;
     private PlayActivity player = PlayActivity.getInstance();
     private Handler handler;
-    MainViewModel model;
+    MainActivityViewModel model;
 
     //Fragment view opener.
     public View onCreateView(@NonNull LayoutInflater inflater,

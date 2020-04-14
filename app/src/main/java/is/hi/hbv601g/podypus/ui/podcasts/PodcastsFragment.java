@@ -1,7 +1,6 @@
 package is.hi.hbv601g.podypus.ui.podcasts;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -27,13 +26,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import is.hi.hbv601g.podypus.MainActivity;
 import is.hi.hbv601g.podypus.MainActivityViewModel;
 
-import is.hi.hbv601g.podypus.MainViewModel;
 import is.hi.hbv601g.podypus.R;
 import is.hi.hbv601g.podypus.entities.Channel;
-import is.hi.hbv601g.podypus.ui.episodes.EpisodeFragment;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
