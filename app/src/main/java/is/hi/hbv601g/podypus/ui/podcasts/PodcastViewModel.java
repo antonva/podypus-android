@@ -1,14 +1,15 @@
-package is.hi.hbv601g.podypus.ui.home;
+package is.hi.hbv601g.podypus.ui.podcasts;
 
+import androidx.cardview.widget.CardView;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class HomeViewModel extends ViewModel {
+public class PodcastViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;
 
-    public HomeViewModel() {
+    public PodcastViewModel() {
         mText = new MutableLiveData<>();
         mText.setValue("This is the home fragment");
     }

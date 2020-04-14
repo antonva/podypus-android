@@ -4,24 +4,33 @@ import android.content.Context;
 import android.media.MediaPlayer;
 import android.widget.Button;
 
+import java.io.IOException;
+
 import is.hi.hbv601g.podypus.R;
 
 public class PlayActivity {
     private static PlayActivity instance = null;
     private static MediaPlayer mp;
+
     //Constructor functions
     //Constructor for the singleton to insure only one instance of the player control object
     private PlayActivity(){
         this.mp = new MediaPlayer();
     }
 
-    //Initialize audio
-    public void loadAudio(Context context){
-        /*MediaPlayer.create(context, local/url)*/
+    //Initialize audio locally
+    public void loadAudioLocal(Context context){
         mp = MediaPlayer.create(context, R.raw.queen); // To be URL-ed
         mp.setLooping(true);
         mp.seekTo(0);
         mp.setVolume(0.7f, 0.7f);
+    }
+
+    //Function to load media files over URL
+    public void loadAudioURL(Context context, String url) throws Exception {
+       mp.setDataSource(url);
+       mp.prepare();
+       mp.start();
     }
 
     //Pause start handler
@@ -38,7 +47,6 @@ public class PlayActivity {
     //Quit playback
     public void quitPlayback(){
         mp.stop();
-
     }
 
     //Get total length of duration

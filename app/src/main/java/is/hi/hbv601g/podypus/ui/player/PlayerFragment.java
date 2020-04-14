@@ -15,6 +15,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+
+import is.hi.hbv601g.podypus.MainActivityViewModel;
 import is.hi.hbv601g.podypus.R;
 
 public class PlayerFragment extends Fragment {
@@ -22,6 +24,7 @@ public class PlayerFragment extends Fragment {
     private PlayerViewModel playerViewModel;
     private PlayActivity player = PlayActivity.getInstance();
     private Handler handler;
+    MainActivityViewModel model;
 
     //Fragment view opener.
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -39,7 +42,7 @@ public class PlayerFragment extends Fragment {
 
         //setup Player(Local mp3 only) - Replace LoadAudio R.id.queen to url for stream
         //Currently only local
-        player.loadAudio(root.getContext());
+        player.loadAudioLocal(root.getContext());
 
         //Image placeholder(Currently only implemented for local)
         ImageView artWork = (ImageView)root.findViewById(R.id.artcover);

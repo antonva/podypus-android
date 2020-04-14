@@ -7,10 +7,28 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="is.hi.hbv601g.podypus.ui.home.HomeFragment"
+        android:name="is.hi.hbv601g.podypus.ui.podcasts.PodcastsFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" >
+        tools:layout="@layout/fragment_podcasts" >
+
+        <action
+            android:id="@+id/action_PodcastFragment_to_LoginFragment"
+            app:popUpTo="@+id/navigation_home"
+            app:popUpToInclusive="true"
+            app:destination="@id/LoginFragment"/>
+
+        <action
+            android:id="@+id/action_PodcastFragment_to_EpisodeFragment"
+            app:popUpTo="@+id/navigation_home"
+            app:popUpToInclusive="true"
+            app:destination="@id/EpisodeFragment"/>
     </fragment>
+
+    <fragment
+        android:id="@+id/EpisodeFragment"
+        android:name="is.hi.hbv601g.podypus.ui.episodes.EpisodeFragment"
+        android:label="Episode"
+        tools:layout="@layout/fragment_episodes" />
 
     <fragment
         android:id="@+id/navigation_search"
@@ -19,8 +37,35 @@
         tools:layout="@layout/fragment_search" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
+        android:id="@+id/navigation_player"
         android:name="is.hi.hbv601g.podypus.ui.player.PlayerFragment"
         android:label="@string/title_player"
         tools:layout="@layout/fragment_player" />
+
+    <fragment
+        android:id="@+id/LoginFragment"
+        android:name="is.hi.hbv601g.podypus.ui.authentication.LoginFragment"
+        android:label="@string/first_fragment_label"
+        tools:layout="@layout/fragment_login">
+
+        <action
+            android:id="@+id/action_LoginFragment_to_RegisterFragment"
+            app:destination="@id/RegisterFragment" />
+        <action
+            android:id="@+id/action_LoginFragment_to_PodcastFragment"
+            app:popUpTo="@+id/navigation_home"
+            app:popUpToInclusive="true"
+            app:destination="@id/navigation_home" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/RegisterFragment"
+        android:name="is.hi.hbv601g.podypus.ui.authentication.RegisterFragment"
+        android:label="@string/second_fragment_label"
+        tools:layout="@layout/fragment_register">
+
+        <action
+            android:id="@+id/action_RegisterFragment_to_LoginFragment"
+            app:destination="@id/LoginFragment" />
+    </fragment>
 </navigation>

@@ -54,6 +54,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         searchViewModel =
                 ViewModelProviders.of(this).get(SearchViewModel.class);
         View root = inflater.inflate(R.layout.fragment_search, container, false);
+        Log.println(Log.INFO,"BOOP", "search should have inflated");
         recyclerView = (RecyclerView) root.findViewById(R.id.searchChannelRecycler);
         layoutManager = new GridLayoutManager(getActivity(), 3);
         recyclerView.setLayoutManager(layoutManager);
