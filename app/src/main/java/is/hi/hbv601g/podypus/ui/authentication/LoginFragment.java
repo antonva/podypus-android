@@ -104,13 +104,16 @@ public class LoginFragment extends Fragment implements View.OnClickListener {
                     // Authentication success
                     Log.println(Log.INFO, "Login", user + " " + password);
                     if (response.code() == 200) {
+                        Log.println(Log.INFO, "Login", response.body().string());
                         SharedPreferences.Editor spe = getActivity().getPreferences(Context.MODE_PRIVATE).edit();
                         spe.putString("username", user);
                         spe.putString("password", password);
                         Log.println(Log.INFO, "Login", user + " " + password);
                         spe.commit();
                         model.authenticated.postValue(true);
-                    }
+                    } else {
+                    //TODO: TOAST!?
+                }
                     Log.println(Log.INFO, "Login", String.valueOf(response.code()));
                 }
             });
