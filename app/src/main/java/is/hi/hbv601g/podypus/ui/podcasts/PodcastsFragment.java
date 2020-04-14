@@ -55,8 +55,6 @@ public class PodcastsFragment extends Fragment implements ChannelAdapter.OnChann
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        podcastViewModel =
-                ViewModelProviders.of(this).get(PodcastViewModel.class);
         model = new ViewModelProvider(requireActivity()).get(MainActivityViewModel.class);
 
         View root = inflater.inflate(R.layout.fragment_podcasts, container, false);

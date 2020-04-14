@@ -11,12 +11,14 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 
+import is.hi.hbv601g.podypus.MainActivityViewModel;
 import is.hi.hbv601g.podypus.entities.SearchItem;
 import is.hi.hbv601g.podypus.entities.SearchResult;
 import okhttp3.Call;
@@ -39,7 +41,7 @@ import is.hi.hbv601g.podypus.R;
 
 public class SearchFragment extends Fragment implements View.OnClickListener {
     public static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
-    private SearchViewModel searchViewModel;
+    private MainActivityViewModel model;
     private SearchView searchView = null;
     private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
@@ -51,15 +53,14 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        searchViewModel =
-                ViewModelProviders.of(this).get(SearchViewModel.class);
+        model = new ViewModelProvider(requireActivity()).get(MainActivityViewModel.class);
         View root = inflater.inflate(R.layout.fragment_search, container, false);
         Log.println(Log.INFO,"BOOP", "search should have inflated");
         recyclerView = (RecyclerView) root.findViewById(R.id.searchChannelRecycler);
         layoutManager = new GridLayoutManager(getActivity(), 3);
         recyclerView.setLayoutManager(layoutManager);
         searchResultData = new ArrayList<>();
-        mAdapter = new GridAdapter(searchResultData);
+        mAdapter = new GridAdapter(searchResultData, model.getUsername());
         recyclerView.setAdapter(mAdapter);
 
         searchView = root.findViewById(R.id.searchView);
