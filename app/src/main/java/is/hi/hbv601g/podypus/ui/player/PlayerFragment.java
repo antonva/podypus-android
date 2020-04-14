@@ -23,9 +23,9 @@ import is.hi.hbv601g.podypus.R;
 public class PlayerFragment extends Fragment {
 
     private PlayerViewModel playerViewModel;
-    private PlayActivity player = PlayActivity.getInstance();
     private Handler handler;
-    private MainActivityViewModel model;
+    private MainActivityViewModel model ;
+
 
     //Fragment view opener.
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -44,7 +44,7 @@ public class PlayerFragment extends Fragment {
         //setup Player(Local mp3 only) - Replace LoadAudio R.id.queen to url for stream
         //Currently only local
         try {
-            player.loadAudioURL(root.getContext(), model.getEpisodeUrl());
+            model.loadAudioUrl(root.getContext(), model.getEpisodeUrl());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -58,7 +58,7 @@ public class PlayerFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 //Toast.makeText(getActivity(), "PLaying or stopping dunno", Toast.LENGTH_SHORT).show();
-                player.stopStartFunction(playStop);
+                model.stopStartFunction(playStop);
             }
         });
 
@@ -68,18 +68,18 @@ public class PlayerFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 //Toast.makeText(getActivity(), "Stopping the audio and quiting", Toast.LENGTH_SHORT).show();
-                player.quitPlayback();
+                model.quitPlayback();
             }
         });
 
         //Seekbar, playback user interaction
         final SeekBar timeBar= (SeekBar)root.findViewById(R.id.timeelapsed);
-        timeBar.setMax(player.getDuration());
+        timeBar.setMax(model.getDuration());
         timeBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 if(fromUser){
-                    player.seek(progress);
+                    model.seek(progress);
                     timeBar.setProgress(progress);
                 }
             }
@@ -110,10 +110,11 @@ public class PlayerFragment extends Fragment {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                while(player != null){
+                while(model != null){
                     try{
+
                         Message msg = new Message();
-                        msg.what = player.getCurrentPos();
+                        msg.what = model.getCurrentPos();
                         handler.sendMessage(msg);
                         Thread.sleep(1000);
                     } catch (InterruptedException e){

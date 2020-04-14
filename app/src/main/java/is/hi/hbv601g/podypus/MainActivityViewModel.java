@@ -1,12 +1,19 @@
 package is.hi.hbv601g.podypus;
 
+import android.content.Context;
+import android.media.MediaPlayer;
+import android.provider.MediaStore;
+import android.widget.Button;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import is.hi.hbv601g.podypus.entities.SearchResult;
+import is.hi.hbv601g.podypus.ui.player.PlayActivity;
 
 public class MainActivityViewModel extends ViewModel {
+    //MutanleLiveData variables
     public MutableLiveData<Boolean> authenticated;
 
     public MutableLiveData<SearchResult> searchResult;
@@ -15,6 +22,10 @@ public class MainActivityViewModel extends ViewModel {
 
     public MutableLiveData<String> episodeUrl = new MutableLiveData<>();
     public MutableLiveData<Long> channelId = new MutableLiveData<>();
+
+    public MutableLiveData<Integer> playerTime = new MutableLiveData<Integer>();
+
+    private PlayActivity player = PlayActivity.getInstance();
 
     //episodeUrl operations
     public void setEpisodeUrl(String url){ episodeUrl.postValue(url); }
@@ -41,6 +52,16 @@ public class MainActivityViewModel extends ViewModel {
         this.authenticated.setValue(b);
     }
 
+    //PlayerTime operations
+    public void setPlayerTime(int time){
+        this.playerTime.setValue(time);
+    }
+
+    public Integer getPlayerTime(){
+        return playerTime.getValue();
+    }
+
+    //Username operarions
     public String getUsername() {
         return username.getValue();
     }
@@ -48,5 +69,36 @@ public class MainActivityViewModel extends ViewModel {
     public void setUsername(String username) {
         this.username.postValue(username);
     }
+
+    //PLayer operations
+    public void loadAudioUrl(Context ctx, String url){
+        try {
+            player.loadAudioURL(ctx, url);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void stopStartFunction(Button b){
+        player.stopStartFunction(b);
+    }
+
+    public void quitPlayback(){
+
+        player.quitPlayback();
+    }
+
+    public int getDuration(){
+        return player.getDuration();
+    }
+
+    public int getCurrentPos(){
+        return player.getCurrentPos();
+    }
+
+    public void seek(int time){
+        player.seek(time);
+    }
+
 }
 
