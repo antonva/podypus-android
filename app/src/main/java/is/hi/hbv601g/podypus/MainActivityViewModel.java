@@ -17,14 +17,14 @@ public class MainActivityViewModel extends ViewModel {
     public MutableLiveData<Long> channelId = new MutableLiveData<>();
 
     //episodeUrl operations
-    public void setEpisodeUrl(String url){ episodeUrl.setValue(url); }
+    public void setEpisodeUrl(String url){ episodeUrl.postValue(url); }
 
-    public MutableLiveData<String> getEpisodeUrl(){
-        return episodeUrl;
+    public String getEpisodeUrl(){
+        return episodeUrl.getValue();
     }
 
     //channelId operations
-    public void setChannelId(long id){ channelId.setValue(id); }
+    public void setChannelId(long id){ channelId.postValue(id); }
 
     public MutableLiveData<Long> getChannelId(){ return channelId; }
 

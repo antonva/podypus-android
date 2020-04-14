@@ -130,7 +130,6 @@ public class PodcastsFragment extends Fragment implements ChannelAdapter.OnChann
 
     @Override
     public void onChannelClick(View view, int position) {
-        //TODO: Implement return to MainActivity to inflate EpisodeFragment here.
         final Channel ch = myDataset.get(position);
         model.setChannelId(ch.id);
         NavHostFragment.findNavController(PodcastsFragment.this)

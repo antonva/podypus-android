@@ -28,7 +28,12 @@
         android:id="@+id/EpisodeFragment"
         android:name="is.hi.hbv601g.podypus.ui.episodes.EpisodeFragment"
         android:label="Episode"
-        tools:layout="@layout/fragment_episodes" />
+        tools:layout="@layout/fragment_episodes" >
+
+        <action
+            android:id="@+id/action_EpisodeFragment_to_PlayerFragment"
+            app:destination="@id/navigation_player"/>
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_search"

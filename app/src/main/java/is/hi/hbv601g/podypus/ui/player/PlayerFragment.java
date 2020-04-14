@@ -14,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 
 import is.hi.hbv601g.podypus.MainActivityViewModel;
@@ -24,16 +25,16 @@ public class PlayerFragment extends Fragment {
     private PlayerViewModel playerViewModel;
     private PlayActivity player = PlayActivity.getInstance();
     private Handler handler;
-    MainActivityViewModel model;
+    private MainActivityViewModel model;
 
     //Fragment view opener.
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        playerViewModel =
-                ViewModelProviders.of(this).get(PlayerViewModel.class);
+        playerViewModel = new ViewModelProvider(this).get(PlayerViewModel.class);
+        model = new ViewModelProvider(requireActivity()).get(MainActivityViewModel.class);
         View root = inflater.inflate(R.layout.fragment_player, container, false);
         final TextView textView = root.findViewById(R.id.text_player);
-        playerViewModel.getText().observe(this, new Observer<String>() {
+        playerViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);
@@ -42,7 +43,11 @@ public class PlayerFragment extends Fragment {
 
         //setup Player(Local mp3 only) - Replace LoadAudio R.id.queen to url for stream
         //Currently only local
-        player.loadAudioLocal(root.getContext());
+        try {
+            player.loadAudioURL(root.getContext(), model.getEpisodeUrl());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         //Image placeholder(Currently only implemented for local)
         ImageView artWork = (ImageView)root.findViewById(R.id.artcover);
