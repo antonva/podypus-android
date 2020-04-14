@@ -11,6 +11,7 @@ import is.hi.hbv601g.podypus.R;
 public class PlayActivity {
     private static PlayActivity instance = null;
     private static MediaPlayer mp;
+
     //Constructor functions
     //Constructor for the singleton to insure only one instance of the player control object
     private PlayActivity(){
