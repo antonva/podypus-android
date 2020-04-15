@@ -42,9 +42,9 @@ public class PlayActivity {
         });
     }
 
-    //Initialize audio locally
+    //Initialize audio locally on device
     public void loadAudioLocal(Context context){
-        mp = MediaPlayer.create(context, R.raw.queen); // To be URL-ed
+        mp = MediaPlayer.create(context, R.raw.queen);
         mp.setLooping(true);
         mp.seekTo(0);
         mp.setVolume(0.7f, 0.7f);

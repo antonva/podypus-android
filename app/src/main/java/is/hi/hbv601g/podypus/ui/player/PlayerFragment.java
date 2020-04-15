@@ -30,6 +30,7 @@ import is.hi.hbv601g.podypus.entities.Episode;
 
 public class PlayerFragment extends Fragment {
 
+    //Player views and operation crusial variables
     private PlayerViewModel playerViewModel;
     private PlayActivity player;
     private Handler handler;
@@ -47,10 +48,6 @@ public class PlayerFragment extends Fragment {
         mTitle = root.findViewById(R.id.player_title);
         mArtwork = root.findViewById(R.id.artcover);
         Executor mExecutor = Executors.newSingleThreadExecutor();
-
-        //Buttons for the forward and rewind buttons
-        final Button forward = (Button)root.findViewById(R.id.buttonForward);
-        final Button backward = (Button)root.findViewById(R.id.buttonReplay);
 
         //Seekbar, playback user interaction
         final SeekBar timeBar= (SeekBar)root.findViewById(R.id.timeelapsed);
@@ -70,6 +67,8 @@ public class PlayerFragment extends Fragment {
                 totalTime.setText(ltdur);
                 currTime.setText(ltcur);
                 timeBar.setMax(duration);
+
+                //Listener that updates the seekbar every iteration
                 timeBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                     @Override
                     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -92,9 +91,8 @@ public class PlayerFragment extends Fragment {
             }
         };
 
-        player = PlayActivity.getInstance(preparedHandler);
+        player = PlayActivity.getInstance(preparedHandler); //Player instance
 
-        //setup Player(Local mp3 only) - Replace LoadAudio R.id.queen to url for stream
         //Currently only local
         model.currentEpisode.observe(getViewLifecycleOwner(), new Observer<Episode>() {
             @Override
@@ -117,7 +115,6 @@ public class PlayerFragment extends Fragment {
 
             }
         });
-
 
         playerViewModel.getTitle().observe(getViewLifecycleOwner(), title -> {
             mTitle.setText(title);
@@ -147,7 +144,26 @@ public class PlayerFragment extends Fragment {
             }
         });
 
+        //Buttons for the forward and rewind buttons
+        final Button forward = (Button)root.findViewById(R.id.buttonForward);
+        forward.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                player.stopStartFunction(playStop);
+                player.seek(player.getCurrentPos() + 10000);
+                player.stopStartFunction(playStop);
+            }
+        });
 
+        final Button backward = (Button)root.findViewById(R.id.buttonReplay);
+        backward.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                player.stopStartFunction(playStop);
+                player.seek(player.getCurrentPos() - 10000);
+                player.stopStartFunction(playStop);
+            }
+        });
 
         //Handler for updating the seekbar on runtime
         handler = new Handler(){

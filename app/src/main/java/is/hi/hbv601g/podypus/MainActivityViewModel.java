@@ -26,6 +26,7 @@ public class MainActivityViewModel extends ViewModel {
 
     public MutableLiveData<Integer> playerTime = new MutableLiveData<Integer>();
 
+    //Variable operations
     //episodeUrl operations
     public void setCurrentEpisode(Episode episode){ this.currentEpisode.postValue(episode); }
 
