@@ -2,6 +2,8 @@ package is.hi.hbv601g.podypus.ui.player;
 
 import android.content.Context;
 import android.media.MediaPlayer;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.widget.Button;
 
@@ -16,7 +18,7 @@ public class PlayActivity {
     private String currentUrl;
 
     //Constructor for the singleton to insure only one instance of the player control object
-    private PlayActivity(){
+    private PlayActivity(Handler handler){
         this.mp = new MediaPlayer();
         this.currentUrl = "";
         this.duration = 0;
@@ -24,6 +26,9 @@ public class PlayActivity {
             @Override
             public void onPrepared(MediaPlayer mp) {
                duration = mp.getDuration();
+               Message msg = new Message();
+               msg.what = duration;
+               handler.sendMessage(msg);
                mp.start();
             }
         });
@@ -105,9 +110,9 @@ public class PlayActivity {
 
     //Static functions
     //Get the player object
-    public static PlayActivity getInstance(){
+    public static PlayActivity getInstance(Handler durationHandler){
         if(instance == null) {
-            instance = new PlayActivity();
+            instance = new PlayActivity(durationHandler);
         }
         return instance;
     }

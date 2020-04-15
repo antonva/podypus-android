@@ -20,6 +20,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalTime;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
@@ -35,17 +36,64 @@ public class PlayerFragment extends Fragment {
     private MainActivityViewModel model;
     private TextView mTitle;
     private ImageView mArtwork;
+    private Handler preparedHandler;
 
     //Fragment view opener.
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        player = PlayActivity.getInstance();
         playerViewModel = new ViewModelProvider(requireActivity()).get(PlayerViewModel.class);
         model = new ViewModelProvider(requireActivity()).get(MainActivityViewModel.class);
         View root = inflater.inflate(R.layout.fragment_player, container, false);
         mTitle = root.findViewById(R.id.player_title);
         mArtwork = root.findViewById(R.id.artcover);
         Executor mExecutor = Executors.newSingleThreadExecutor();
+
+        //Buttons for the forward and rewind buttons
+        final Button forward = (Button)root.findViewById(R.id.buttonForward);
+        final Button backward = (Button)root.findViewById(R.id.buttonReplay);
+
+        //Seekbar, playback user interaction
+        final SeekBar timeBar= (SeekBar)root.findViewById(R.id.timeelapsed);
+
+        // Current playback position and total duration of episode
+        final TextView currTime = (TextView)root.findViewById(R.id.currentTime);
+        final TextView totalTime = (TextView)root.findViewById(R.id.totalTime);
+
+        preparedHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                int duration = player.getDuration();
+                int currpos = player.getCurrentPos();
+                // Function requires seconds but duration is in ms.
+                String ltdur = LocalTime.ofSecondOfDay(duration/1000).toString();
+                String ltcur = LocalTime.ofSecondOfDay(currpos/1000).toString();
+                totalTime.setText(ltdur);
+                currTime.setText(ltcur);
+                timeBar.setMax(duration);
+                timeBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                    @Override
+                    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                        if(fromUser){
+                            player.seek(progress);
+                            timeBar.setProgress(progress);
+                        }
+                    }
+                    //Purposely empty. SeekBar class requires it to be stated.
+                    @Override
+                    public void onStartTrackingTouch(SeekBar seekBar) {
+
+                    }
+                    //Purposely empty, SeekBar class requires it to be stated.
+                    @Override
+                    public void onStopTrackingTouch(SeekBar seekBar) {
+
+                    }
+                });
+            }
+        };
+
+        player = PlayActivity.getInstance(preparedHandler);
+
         //setup Player(Local mp3 only) - Replace LoadAudio R.id.queen to url for stream
         //Currently only local
         model.currentEpisode.observe(getViewLifecycleOwner(), new Observer<Episode>() {
@@ -70,12 +118,6 @@ public class PlayerFragment extends Fragment {
             }
         });
 
-        //Buttons for the forward and rewind buttons
-        final Button forward = (Button)root.findViewById(R.id.buttonForward);
-        final Button backward = (Button)root.findViewById(R.id.buttonReplay);
-
-        final TextView currTime = (TextView)root.findViewById(R.id.currentTime);
-        final TextView totalTime = (TextView)root.findViewById(R.id.totalTime);
 
         playerViewModel.getTitle().observe(getViewLifecycleOwner(), title -> {
             mTitle.setText(title);
@@ -105,28 +147,7 @@ public class PlayerFragment extends Fragment {
             }
         });
 
-        //Seekbar, playback user interaction
-        final SeekBar timeBar= (SeekBar)root.findViewById(R.id.timeelapsed);
-        timeBar.setMax(player.getDuration());
-        timeBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if(fromUser){
-                    player.seek(progress);
-                    timeBar.setProgress(progress);
-                }
-            }
-            //Purposely empty. SeekBar class requires it to be stated.
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
 
-            }
-            //Purposely empty, SeekBar class requires it to be stated.
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
-            }
-        });
 
         //Handler for updating the seekbar on runtime
         handler = new Handler(){
@@ -135,6 +156,8 @@ public class PlayerFragment extends Fragment {
                 int currentPosition = msg.what;
                 //Update pos on timebar
                 timeBar.setProgress(currentPosition);
+                String ltc = LocalTime.ofSecondOfDay(currentPosition/1000).toString();
+                currTime.setText(ltc);
 
             }
         };
@@ -156,6 +179,30 @@ public class PlayerFragment extends Fragment {
                 }
             }
         }).start();
+
+        int duration = player.getDuration();
+        String ltd = LocalTime.ofSecondOfDay(duration/1000).toString();
+        totalTime.setText(ltd);
+        timeBar.setMax(duration);
+        timeBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                if(fromUser){
+                    player.seek(progress);
+                    timeBar.setProgress(progress);
+                }
+            }
+            //Purposely empty. SeekBar class requires it to be stated.
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+            //Purposely empty, SeekBar class requires it to be stated.
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
 
         return root;
     }
