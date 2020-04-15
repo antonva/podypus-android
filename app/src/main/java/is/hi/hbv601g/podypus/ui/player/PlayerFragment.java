@@ -1,8 +1,11 @@
 package is.hi.hbv601g.podypus.ui.player;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +18,12 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import is.hi.hbv601g.podypus.MainActivityViewModel;
 import is.hi.hbv601g.podypus.R;
@@ -26,6 +34,8 @@ public class PlayerFragment extends Fragment {
     private PlayActivity player = PlayActivity.getInstance();
     private Handler handler;
     private MainActivityViewModel model;
+    private TextView mTitle;
+    private ImageView mArtwork;
 
     //Fragment view opener.
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -33,24 +43,40 @@ public class PlayerFragment extends Fragment {
         playerViewModel = new ViewModelProvider(this).get(PlayerViewModel.class);
         model = new ViewModelProvider(requireActivity()).get(MainActivityViewModel.class);
         View root = inflater.inflate(R.layout.fragment_player, container, false);
-        final TextView textView = root.findViewById(R.id.text_player);
-        playerViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                textView.setText(s);
+        mTitle = root.findViewById(R.id.player_title);
+        mArtwork = root.findViewById(R.id.artcover);
+        Executor mExecutor = Executors.newSingleThreadExecutor();
+        //setup Player(Local mp3 only) - Replace LoadAudio R.id.queen to url for stream
+        //Currently only local
+        model.currentEpisode.observe(getViewLifecycleOwner(), episode -> {
+            try {
+                playerViewModel.setTitle(episode.title);
+                player.loadAudioURL(root.getContext(), episode.enclosure_url);
+                Log.println(Log.INFO,"Player", episode.image);
+                mExecutor.execute( new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            URL iu = new URL(episode.image);
+                            playerViewModel.setArtwork(BitmapFactory.decodeStream(iu.openConnection().getInputStream()));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
 
-        //setup Player(Local mp3 only) - Replace LoadAudio R.id.queen to url for stream
-        //Currently only local
-        try {
-            player.loadAudioURL(root.getContext(), model.getEpisodeUrl());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        playerViewModel.getTitle().observe(getViewLifecycleOwner(), title -> {
+            mTitle.setText(title);
+        });
 
-        //Image placeholder(Currently only implemented for local)
-        ImageView artWork = (ImageView)root.findViewById(R.id.artcover);
+        playerViewModel.getArtwork().observe(getViewLifecycleOwner(), bitmap -> {
+            mArtwork.setImageBitmap(bitmap);
+        });
+
 
         //Play button interaction
         final Button playStop = (Button)root.findViewById(R.id.buttonPlayStop);

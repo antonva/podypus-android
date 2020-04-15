@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import is.hi.hbv601g.podypus.entities.Episode;
 import is.hi.hbv601g.podypus.entities.SearchResult;
 
 public class MainActivityViewModel extends ViewModel {
@@ -13,14 +14,14 @@ public class MainActivityViewModel extends ViewModel {
 
     public MutableLiveData<String> username = new MutableLiveData<>();
 
-    public MutableLiveData<String> episodeUrl = new MutableLiveData<>();
+    public MutableLiveData<Episode> currentEpisode = new MutableLiveData<>();
     public MutableLiveData<Long> channelId = new MutableLiveData<>();
 
     //episodeUrl operations
-    public void setEpisodeUrl(String url){ episodeUrl.postValue(url); }
+    public void setCurrentEpisode(Episode episode){ this.currentEpisode.postValue(episode); }
 
-    public String getEpisodeUrl(){
-        return episodeUrl.getValue();
+    public LiveData<Episode> getCurrentEpisode(){
+        return currentEpisode;
     }
 
     //channelId operations

@@ -91,6 +91,7 @@ public class EpisodeFragment extends Fragment implements EpisodeAdapter.OnEpisod
                     }
                     Log.println(Log.INFO, "Episodes", String.valueOf(response.code()));
                     Log.println(Log.INFO, "Episodes", String.valueOf(myDataset.size()));
+                    response.close();
                 }
             });
         } catch (JSONException e) {
@@ -124,7 +125,7 @@ public class EpisodeFragment extends Fragment implements EpisodeAdapter.OnEpisod
     @Override
     public void onEpisodeClick(View view, int position) {
         final Episode e = myDataset.get(position);
-        model.setEpisodeUrl(e.enclosure_url);
+        model.setCurrentEpisode(e);
         NavHostFragment.findNavController(this)
                 .navigate(R.id.action_EpisodeFragment_to_PlayerFragment);
     }
