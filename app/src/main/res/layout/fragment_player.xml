@@ -37,6 +37,8 @@
             android:layout_marginBottom="32dp"
             android:text="Podcast Title"
             android:textAlignment="center"
+            android:maxLines="1"
+            android:ellipsize="end"
             android:textSize="20sp" />
 
     <LinearLayout

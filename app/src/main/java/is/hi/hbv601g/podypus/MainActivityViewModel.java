@@ -11,7 +11,7 @@ public class MainActivityViewModel extends ViewModel {
     //MutableLiveData variables
     public MutableLiveData<Boolean> authenticated;
 
-    public MutableLiveData<SearchResult> searchResult;
+    public MutableLiveData<SearchResult> searchResult = new MutableLiveData<>();
 
     public MutableLiveData<String> username = new MutableLiveData<>();
 
@@ -69,5 +69,14 @@ public class MainActivityViewModel extends ViewModel {
         tmpep.playbackPos = pos;
         this.currentEpisode.postValue(tmpep);
     }
+
+    public SearchResult getSearchResult() {
+        return searchResult.getValue();
+    }
+
+    public void setSearchResult(SearchResult result) {
+        this.searchResult.postValue(result);
+    }
+
 }
 
