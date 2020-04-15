@@ -33,6 +33,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -53,15 +54,38 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        model = new ViewModelProvider(requireActivity()).get(MainActivityViewModel.class);
         View root = inflater.inflate(R.layout.fragment_search, container, false);
-        Log.println(Log.INFO,"BOOP", "search should have inflated");
-        recyclerView = (RecyclerView) root.findViewById(R.id.searchChannelRecycler);
+        model = new ViewModelProvider(requireActivity()).get(MainActivityViewModel.class);
+
+        recyclerView = root.findViewById(R.id.searchChannelRecycler);
         layoutManager = new GridLayoutManager(getActivity(), 3);
         recyclerView.setLayoutManager(layoutManager);
         searchResultData = new ArrayList<>();
         mAdapter = new GridAdapter(searchResultData, model.getUsername());
         recyclerView.setAdapter(mAdapter);
+
+        /*if (model.getSearchResult() != null) {
+            for (SearchItem i: model.getSearchResult().results) {
+                URL imageUrl = null;
+                try {
+                    imageUrl = new URL(i.artworkUrl100);
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    i.image = BitmapFactory.decodeStream(imageUrl.openConnection().getInputStream());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                searchResultData.add(i);
+            }
+            getActivity().runOnUiThread(new Runnable(){
+                @Override
+                public void run() {
+                    mAdapter.notifyDataSetChanged();
+                }
+            });
+        }*/
 
         searchView = root.findViewById(R.id.searchView);
         searchView.requestFocusFromTouch();
@@ -119,6 +143,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
                             URL imageUrl = new URL(i.artworkUrl100);
                             i.image = BitmapFactory.decodeStream(imageUrl.openConnection().getInputStream());
                             searchResultData.add(i);
+                            model.setSearchResult(sr);
                         }
                         getActivity().runOnUiThread(new Runnable(){
                             @Override

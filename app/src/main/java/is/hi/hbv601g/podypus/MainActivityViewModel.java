@@ -9,7 +9,7 @@ import is.hi.hbv601g.podypus.entities.SearchResult;
 public class MainActivityViewModel extends ViewModel {
     public MutableLiveData<Boolean> authenticated;
 
-    public MutableLiveData<SearchResult> searchResult;
+    public MutableLiveData<SearchResult> searchResult = new MutableLiveData<>();
 
     public MutableLiveData<String> username = new MutableLiveData<>();
 
@@ -47,6 +47,14 @@ public class MainActivityViewModel extends ViewModel {
 
     public void setUsername(String username) {
         this.username.postValue(username);
+    }
+
+    public SearchResult getSearchResult() {
+        return searchResult.getValue();
+    }
+
+    public void setSearchResult(SearchResult result) {
+        this.searchResult.postValue(result);
     }
 }
 
