@@ -52,7 +52,7 @@ public class MainActivityViewModel extends ViewModel {
         this.authenticated.setValue(b);
     }
 
-    //PlayerTime operations
+    //PlayerTimeKeeping operations
     public void setPlayerTime(int time){
         this.playerTime.setValue(time);
     }
@@ -84,7 +84,6 @@ public class MainActivityViewModel extends ViewModel {
     }
 
     public void quitPlayback(){
-
         player.quitPlayback();
     }
 
@@ -100,5 +99,16 @@ public class MainActivityViewModel extends ViewModel {
         player.seek(time);
     }
 
+    public void stopFunction(Button btn){
+        player.stopStartFunction(btn);
+    }
+
+    public void startFunction(Button btn){
+        player.startFunction(btn);
+    }
+
+    public Boolean isPlaying(){
+        return player.isPlaying();
+    }
 }
 

@@ -28,9 +28,10 @@ public class PlayActivity {
 
     //Function to load media files over URL
     public void loadAudioURL(Context context, String url) throws Exception {
-       mp.setDataSource(url);
-       mp.prepare();
-       mp.start();
+        mp.reset();
+        mp.setDataSource(url);
+        mp.prepare();
+        mp.start();
     }
 
     //Pause start handler
@@ -42,6 +43,21 @@ public class PlayActivity {
             mp.pause();
             button.setBackgroundResource(R.drawable.play);
         }
+    }
+
+    //Stop the player
+    public void stopFunction(Button btn){
+        mp.pause();
+    }
+
+    //Start the player
+    public void startFunction(Button btn){
+        mp.start();
+    }
+
+    //Check for if playback is currently running
+    public Boolean isPlaying(){
+        return mp.isPlaying();
     }
 
     //Quit playback
