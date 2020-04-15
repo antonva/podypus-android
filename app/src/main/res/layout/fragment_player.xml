@@ -8,24 +8,37 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center_horizontal"
         android:orientation="vertical"
-        tools:layout_editor_absoluteX="108dp"
-        tools:layout_editor_absoluteY="-65dp">
+        android:gravity="center_horizontal">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="347dp">
+
+            <ImageView
+                android:id="@+id/artcover"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                android:src="@drawable/placeholderplayer"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.419" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
-            android:id="@+id/text_player"
-            android:layout_width="match_parent"
+            android:id="@+id/player_title"
+            android:layout_width="429dp"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
+            android:text="@string/title_activity_authentication"
             android:textAlignment="center"
             android:textSize="20sp" />
 
-        <ImageView
-            android:id="@+id/artcover"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="60dp"
-            android:src="@drawable/placeholderplayer" />
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -9,6 +9,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import is.hi.hbv601g.podypus.entities.Episode;
 import is.hi.hbv601g.podypus.entities.SearchResult;
 import is.hi.hbv601g.podypus.ui.player.PlayActivity;
 
@@ -20,18 +21,16 @@ public class MainActivityViewModel extends ViewModel {
 
     public MutableLiveData<String> username = new MutableLiveData<>();
 
-    public MutableLiveData<String> episodeUrl = new MutableLiveData<>();
+    public MutableLiveData<Episode> currentEpisode = new MutableLiveData<>();
     public MutableLiveData<Long> channelId = new MutableLiveData<>();
 
     public MutableLiveData<Integer> playerTime = new MutableLiveData<Integer>();
 
-    private PlayActivity player = PlayActivity.getInstance();
-
     //episodeUrl operations
-    public void setEpisodeUrl(String url){ episodeUrl.postValue(url); }
+    public void setCurrentEpisode(Episode episode){ this.currentEpisode.postValue(episode); }
 
-    public String getEpisodeUrl(){
-        return episodeUrl.getValue();
+    public LiveData<Episode> getCurrentEpisode(){
+        return currentEpisode;
     }
 
     //channelId operations
@@ -70,45 +69,5 @@ public class MainActivityViewModel extends ViewModel {
         this.username.postValue(username);
     }
 
-    //PLayer operations
-    public void loadAudioUrl(Context ctx, String url){
-        try {
-            player.loadAudioURL(ctx, url);
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
-    public void stopStartFunction(Button b){
-        player.stopStartFunction(b);
-    }
-
-    public void quitPlayback(){
-        player.quitPlayback();
-    }
-
-    public int getDuration(){
-        return player.getDuration();
-    }
-
-    public int getCurrentPos(){
-        return player.getCurrentPos();
-    }
-
-    public void seek(int time){
-        player.seek(time);
-    }
-
-    public void stopFunction(Button btn){
-        player.stopStartFunction(btn);
-    }
-
-    public void startFunction(Button btn){
-        player.startFunction(btn);
-    }
-
-    public Boolean isPlaying(){
-        return player.isPlaying();
-    }
 }
 
