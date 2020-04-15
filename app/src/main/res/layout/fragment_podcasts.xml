@@ -7,8 +7,8 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/podcastChannelRecycler"
-        android:layout_width="408dp"
-        android:layout_height="592dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_margin="@dimen/margin10"
         android:layout_marginHorizontal="@dimen/margin10"
         android:layout_marginVertical="@dimen/margin10"
