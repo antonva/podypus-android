@@ -1,11 +1,9 @@
 package is.hi.hbv601g.podypus.ui.player;
 
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +28,7 @@ import is.hi.hbv601g.podypus.entities.Episode;
 
 public class PlayerFragment extends Fragment {
 
+    //Player views and operation crusial variables
     private PlayerViewModel playerViewModel;
     private PlayActivity player;
     private Handler handler;
@@ -41,16 +40,13 @@ public class PlayerFragment extends Fragment {
     //Fragment view opener.
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+        //Fragment variables
         playerViewModel = new ViewModelProvider(requireActivity()).get(PlayerViewModel.class);
         model = new ViewModelProvider(requireActivity()).get(MainActivityViewModel.class);
         View root = inflater.inflate(R.layout.fragment_player, container, false);
         mTitle = root.findViewById(R.id.player_title);
         mArtwork = root.findViewById(R.id.artcover);
         Executor mExecutor = Executors.newSingleThreadExecutor();
-
-        //Buttons for the forward and rewind buttons
-        final Button forward = (Button)root.findViewById(R.id.buttonForward);
-        final Button backward = (Button)root.findViewById(R.id.buttonReplay);
 
         //Seekbar, playback user interaction
         final SeekBar timeBar= (SeekBar)root.findViewById(R.id.timeelapsed);
@@ -70,6 +66,8 @@ public class PlayerFragment extends Fragment {
                 totalTime.setText(ltdur);
                 currTime.setText(ltcur);
                 timeBar.setMax(duration);
+
+                //Listener that updates the seekbar every iteration
                 timeBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                     @Override
                     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -92,10 +90,10 @@ public class PlayerFragment extends Fragment {
             }
         };
 
+        //Player instance
         player = PlayActivity.getInstance(preparedHandler);
 
-        //setup Player(Local mp3 only) - Replace LoadAudio R.id.queen to url for stream
-        //Currently only local
+        //Episode update observer, updates episodes when they change in the player
         model.currentEpisode.observe(getViewLifecycleOwner(), new Observer<Episode>() {
             @Override
             public void onChanged(Episode episode) {
@@ -118,7 +116,6 @@ public class PlayerFragment extends Fragment {
             }
         });
 
-
         playerViewModel.getTitle().observe(getViewLifecycleOwner(), title -> {
             mTitle.setText(title);
         });
@@ -132,7 +129,6 @@ public class PlayerFragment extends Fragment {
         playStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Toast.makeText(getActivity(), "PLaying or stopping dunno", Toast.LENGTH_SHORT).show();
                 player.stopStartFunction(playStop);
             }
         });
@@ -142,12 +138,31 @@ public class PlayerFragment extends Fragment {
         stop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Toast.makeText(getActivity(), "Stopping the audio and quiting", Toast.LENGTH_SHORT).show();
                 player.quitPlayback();
             }
         });
 
+        //Forward button
+        final Button forward = (Button)root.findViewById(R.id.buttonForward);
+        forward.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                player.stopStartFunction(playStop);
+                player.seek(player.getCurrentPos() + 10000);
+                player.stopStartFunction(playStop);
+            }
+        });
 
+        //Backward button
+        final Button backward = (Button)root.findViewById(R.id.buttonReplay);
+        backward.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                player.stopStartFunction(playStop);
+                player.seek(player.getCurrentPos() - 10000);
+                player.stopStartFunction(playStop);
+            }
+        });
 
         //Handler for updating the seekbar on runtime
         handler = new Handler(){
@@ -180,6 +195,7 @@ public class PlayerFragment extends Fragment {
             }
         }).start();
 
+        //Seekbar update listener
         int duration = player.getDuration();
         String ltd = LocalTime.ofSecondOfDay(duration/1000).toString();
         totalTime.setText(ltd);

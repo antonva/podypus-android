@@ -7,8 +7,6 @@ import android.os.Message;
 import android.util.Log;
 import android.widget.Button;
 
-import com.google.gson.internal.$Gson$Preconditions;
-
 import is.hi.hbv601g.podypus.R;
 
 public class PlayActivity {
@@ -33,6 +31,7 @@ public class PlayActivity {
             }
         });
 
+        //Error handler
         mp.setOnErrorListener(new MediaPlayer.OnErrorListener() {
             @Override
             public boolean onError(MediaPlayer mp, int what, int extra) {
@@ -42,9 +41,9 @@ public class PlayActivity {
         });
     }
 
-    //Initialize audio locally
+    //Initialize audio with a local file on device
     public void loadAudioLocal(Context context){
-        mp = MediaPlayer.create(context, R.raw.queen); // To be URL-ed
+        mp = MediaPlayer.create(context, R.raw.queen);
         mp.setLooping(true);
         mp.seekTo(0);
         mp.setVolume(0.7f, 0.7f);

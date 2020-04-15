@@ -7,10 +7,12 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 public class PlayerViewModel extends ViewModel {
+    //Viewmodel for the player
 
     private MutableLiveData<String> title = new MutableLiveData<>();
     private MutableLiveData<Bitmap> artwork = new MutableLiveData<>();
 
+    //Title of episode
     public LiveData<String> getTitle() {
         if (this.title == null) {
             this.title = new MutableLiveData<>();
@@ -18,7 +20,7 @@ public class PlayerViewModel extends ViewModel {
         }
         return this.title;
     }
-
+    //Getters and setters
     public void setTitle(String title) {
         this.title.postValue(title);
     }
