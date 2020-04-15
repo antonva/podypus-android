@@ -27,7 +27,8 @@ public class PlayActivity {
             public void onPrepared(MediaPlayer mp) {
                duration = mp.getDuration();
                Message msg = new Message();
-               msg.what = duration;
+               msg.arg1 = duration;
+               msg.arg2 = 0;
                handler.sendMessage(msg);
                mp.start();
 
@@ -35,6 +36,15 @@ public class PlayActivity {
             }
         });
 
+        mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                Message msg = new Message();
+                msg.arg1 = mp.getDuration();
+                msg.arg2 = 1;
+                handler.sendMessage(msg);
+            }
+        });
         //Error handler
         mp.setOnErrorListener(new MediaPlayer.OnErrorListener() {
             @Override

@@ -10,14 +10,10 @@ import is.hi.hbv601g.podypus.entities.SearchResult;
 public class MainActivityViewModel extends ViewModel {
     //MutableLiveData variables
     public MutableLiveData<Boolean> authenticated;
-
     public MutableLiveData<SearchResult> searchResult = new MutableLiveData<>();
-
     public MutableLiveData<String> username = new MutableLiveData<>();
-
     public MutableLiveData<Episode> currentEpisode = new MutableLiveData<>();
     public MutableLiveData<Long> channelId = new MutableLiveData<>();
-
     public MutableLiveData<Integer> playerTime = new MutableLiveData<Integer>();
 
     //Variable operations

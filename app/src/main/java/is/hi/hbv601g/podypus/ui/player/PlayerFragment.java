@@ -1,5 +1,6 @@
 package is.hi.hbv601g.podypus.ui.player;
 
+import android.annotation.SuppressLint;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
@@ -71,8 +72,26 @@ public class PlayerFragment extends Fragment {
         preparedHandler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
-                int duration = player.getDuration();
+                int duration = msg.arg1;
                 int currpos = player.getCurrentPos();
+                //playback finished
+                if (msg.arg2 == 1) {
+                    try {
+                        updatePlaybackPosition(true, model.getUsername(), model.currentEpisode.getValue(), currpos, new okhttp3.Callback() {
+                            @Override
+                            public void onFailure(@NotNull Call call, @NotNull IOException e) {
+
+                            }
+
+                            @Override
+                            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+
+                            }
+                        });
+                    } catch (JSONException e) {
+                    } catch (IOException e) {
+                    }
+                }
                 // Function requires seconds but duration is in ms.
                 String ltdur = LocalTime.ofSecondOfDay(duration/1000).toString();
                 String ltcur = LocalTime.ofSecondOfDay(currpos/1000).toString();
@@ -186,9 +205,9 @@ public class PlayerFragment extends Fragment {
                 //Update pos on timebar
                 timeBar.setProgress(currentPosition);
                 //API expects seconds
-                model.updatePlaybackPos((double) currentPosition/1000);
+                model.setPlayerTime(currentPosition/1000);
                 try {
-                    updatePlaybackPosition(model.getUsername(), model.currentEpisode.getValue(), new okhttp3.Callback() {
+                    updatePlaybackPosition(false, model.getUsername(), model.currentEpisode.getValue(), model.getPlayerTime(), new okhttp3.Callback() {
                         @Override
                         public void onFailure(@NotNull Call call, @NotNull IOException e) {
 
@@ -256,14 +275,15 @@ public class PlayerFragment extends Fragment {
         return root;
     }
 
-    private  Call updatePlaybackPosition(String user, Episode ep, okhttp3.Callback callback) throws JSONException, IOException {
+    Call updatePlaybackPosition(boolean ended, String user, Episode ep, int time, okhttp3.Callback callback) throws JSONException, IOException {
         String url = "https://podypus.punk.is/update-playback-pos";
 
         OkHttpClient client = new OkHttpClient();
         JSONObject js = new JSONObject();
         js.put("username", user);
         js.put("id", ep.id);
-        js.put("pos", ep.playbackPos);
+        js.put("pos", time);
+        js.put("ended", ended);
         String reqBody = js.toString();
         RequestBody body = RequestBody.create(reqBody,JSON);
         Request request = new Request.Builder()
