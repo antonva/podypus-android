@@ -15,7 +15,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
+
+import org.w3c.dom.Text;
 
 import is.hi.hbv601g.podypus.MainActivityViewModel;
 import is.hi.hbv601g.podypus.R;
@@ -41,6 +42,13 @@ public class PlayerFragment extends Fragment {
             }
         });
 
+        //Buttons for the forward and rewind buttons
+        final Button forward = (Button)root.findViewById(R.id.buttonForward);
+        final Button backward = (Button)root.findViewById(R.id.buttonReplay);
+
+        final TextView currTime = (TextView)root.findViewById(R.id.currentTime);
+        final TextView totalTime = (TextView)root.findViewById(R.id.totalTime);
+
         //setup Player(Local mp3 only) - Replace LoadAudio R.id.queen to url for stream
         //Currently only local
         try {
@@ -63,7 +71,7 @@ public class PlayerFragment extends Fragment {
         });
 
         //Quit button interaction
-        final Button stop = (Button)root.findViewById(R.id.buttonQuit);
+        final Button stop = (Button)root.findViewById(R.id.buttonForward);
         stop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

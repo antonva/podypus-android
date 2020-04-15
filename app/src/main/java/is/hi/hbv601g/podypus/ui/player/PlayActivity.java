@@ -38,10 +38,10 @@ public class PlayActivity {
     public void stopStartFunction(Button button){
         if(!mp.isPlaying()) {
             mp.start();
-            button.setBackgroundResource(R.drawable.stop);
+            button.setBackgroundResource(R.drawable.round_pause_black_48);
         } else {
             mp.pause();
-            button.setBackgroundResource(R.drawable.play);
+            button.setBackgroundResource(R.drawable.round_play_arrow_black_48);
         }
     }
 
