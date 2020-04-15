@@ -4,6 +4,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,10 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalTime;
@@ -25,10 +30,17 @@ import java.util.concurrent.Executors;
 import is.hi.hbv601g.podypus.MainActivityViewModel;
 import is.hi.hbv601g.podypus.R;
 import is.hi.hbv601g.podypus.entities.Episode;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class PlayerFragment extends Fragment {
 
-    //Player views and operation crusial variables
+    //Player views and operation crucial variables
     private PlayerViewModel playerViewModel;
     private PlayActivity player;
     private Handler handler;
@@ -36,6 +48,7 @@ public class PlayerFragment extends Fragment {
     private TextView mTitle;
     private ImageView mArtwork;
     private Handler preparedHandler;
+    public static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
 
     //Fragment view opener.
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -102,13 +115,14 @@ public class PlayerFragment extends Fragment {
                     public void run() {
                         try {
                             URL iu = new URL(episode.image);
+                            Episode e = model.getCurrentEpisode().getValue();
+                            long p = (long) (e.playbackPos * 1000);
                             playerViewModel.setArtwork(BitmapFactory.decodeStream(iu.openConnection().getInputStream()));
                             playerViewModel.setTitle(episode.title);
-                            player.loadAudioURL(root.getContext(), episode.enclosure_url);
+                            player.loadAudioURL(root.getContext(), episode.enclosure_url, e.playbackPos);
                         } catch (IOException e) {
                             e.printStackTrace();
                         } catch (Exception e) {
-                            e.printStackTrace();
                         }
                     }
                 });
@@ -171,6 +185,24 @@ public class PlayerFragment extends Fragment {
                 int currentPosition = msg.what;
                 //Update pos on timebar
                 timeBar.setProgress(currentPosition);
+                //API expects seconds
+                model.updatePlaybackPos((double) currentPosition/1000);
+                try {
+                    updatePlaybackPosition(model.getUsername(), model.currentEpisode.getValue(), new okhttp3.Callback() {
+                        @Override
+                        public void onFailure(@NotNull Call call, @NotNull IOException e) {
+
+                        }
+
+                        @Override
+                        public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
+                            //TODO: Maybe do something here
+                            Log.println(Log.INFO, "PLAYER", "Updated playback position");
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 String ltc = LocalTime.ofSecondOfDay(currentPosition/1000).toString();
                 currTime.setText(ltc);
 
@@ -182,14 +214,15 @@ public class PlayerFragment extends Fragment {
             @Override
             public void run() {
                 while(player != null){
-                    try{
-
-                        Message msg = new Message();
-                        msg.what = player.getCurrentPos();
-                        handler.sendMessage(msg);
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e){
-
+                    if(player.isPlaying()) {
+                        try {
+                            Message msg = new Message();
+                            msg.what = player.getCurrentPos();
+                            handler.sendMessage(msg);
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
@@ -221,5 +254,24 @@ public class PlayerFragment extends Fragment {
         });
 
         return root;
+    }
+
+    private  Call updatePlaybackPosition(String user, Episode ep, okhttp3.Callback callback) throws JSONException, IOException {
+        String url = "https://podypus.punk.is/update-playback-pos";
+
+        OkHttpClient client = new OkHttpClient();
+        JSONObject js = new JSONObject();
+        js.put("username", user);
+        js.put("id", ep.id);
+        js.put("pos", ep.playbackPos);
+        String reqBody = js.toString();
+        RequestBody body = RequestBody.create(reqBody,JSON);
+        Request request = new Request.Builder()
+                .url(url)
+                .post(body)
+                .build();
+        Call call = client.newCall(request);
+        call.enqueue(callback);
+        return call;
     }
 }

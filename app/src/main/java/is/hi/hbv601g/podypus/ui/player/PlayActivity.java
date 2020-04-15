@@ -14,12 +14,14 @@ public class PlayActivity {
     private static MediaPlayer mp;
     private int duration;
     private String currentUrl;
+    private double startpos;
 
     //Constructor for the singleton to insure only one instance of the player control object
     private PlayActivity(Handler handler){
         this.mp = new MediaPlayer();
         this.currentUrl = "";
         this.duration = 0;
+        this.startpos = 0;
         mp.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
             public void onPrepared(MediaPlayer mp) {
@@ -28,6 +30,8 @@ public class PlayActivity {
                msg.what = duration;
                handler.sendMessage(msg);
                mp.start();
+
+               mp.seekTo((int) (startpos * 1000));
             }
         });
 
@@ -50,11 +54,12 @@ public class PlayActivity {
     }
 
     //Function to load media files over URL
-    public void loadAudioURL(Context context, String url) throws Exception {
+    public void loadAudioURL(Context context, String url, double pos) throws Exception {
         if (this.currentUrl != url) {
             mp.reset();
             this.currentUrl = url;
         }
+        this.startpos = pos;
         mp.setDataSource(url);
         mp.prepareAsync();
     }

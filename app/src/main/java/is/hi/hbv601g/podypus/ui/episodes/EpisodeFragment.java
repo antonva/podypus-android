@@ -24,6 +24,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import is.hi.hbv601g.podypus.MainActivityViewModel;
@@ -82,6 +83,12 @@ public class EpisodeFragment extends Fragment implements EpisodeAdapter.OnEpisod
                         for (Episode e: subscribedEpisodes) {
                             myDataset.add(e);
                         }
+                        myDataset.sort(new Comparator<Episode>() {
+                            @Override
+                            public int compare(Episode o1, Episode o2) {
+                                return o1.title.compareTo(o2.title);
+                            }
+                        });
                         getActivity().runOnUiThread(new Runnable(){
                             @Override
                             public void run() {

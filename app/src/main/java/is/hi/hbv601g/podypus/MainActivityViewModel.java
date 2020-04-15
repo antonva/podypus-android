@@ -64,5 +64,10 @@ public class MainActivityViewModel extends ViewModel {
         this.username.postValue(username);
     }
 
+    public void updatePlaybackPos(Double pos) {
+        Episode tmpep = this.currentEpisode.getValue();
+        tmpep.playbackPos = pos;
+        this.currentEpisode.postValue(tmpep);
+    }
 }
 
