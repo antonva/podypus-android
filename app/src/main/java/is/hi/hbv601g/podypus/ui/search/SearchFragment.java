@@ -64,29 +64,6 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
         mAdapter = new GridAdapter(searchResultData, model.getUsername());
         recyclerView.setAdapter(mAdapter);
 
-        /*if (model.getSearchResult() != null) {
-            for (SearchItem i: model.getSearchResult().results) {
-                URL imageUrl = null;
-                try {
-                    imageUrl = new URL(i.artworkUrl100);
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                }
-                try {
-                    i.image = BitmapFactory.decodeStream(imageUrl.openConnection().getInputStream());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                searchResultData.add(i);
-            }
-            getActivity().runOnUiThread(new Runnable(){
-                @Override
-                public void run() {
-                    mAdapter.notifyDataSetChanged();
-                }
-            });
-        }*/
-
         searchView = root.findViewById(R.id.searchView);
         searchView.requestFocusFromTouch();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -103,7 +80,6 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
                 return false;
             }
         });
-
     return root;
     }
 
