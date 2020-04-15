@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -27,7 +28,9 @@ import java.util.List;
 
 import is.hi.hbv601g.podypus.MainActivityViewModel;
 import is.hi.hbv601g.podypus.R;
+import is.hi.hbv601g.podypus.entities.Channel;
 import is.hi.hbv601g.podypus.entities.Episode;
+import is.hi.hbv601g.podypus.ui.podcasts.PodcastsFragment;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
@@ -120,6 +123,9 @@ public class EpisodeFragment extends Fragment implements EpisodeAdapter.OnEpisod
 
     @Override
     public void onEpisodeClick(View view, int position) {
-        //TOOD:...
+        final Episode e = myDataset.get(position);
+        model.setEpisodeUrl(e.enclosure_url);
+        NavHostFragment.findNavController(this)
+                .navigate(R.id.action_EpisodeFragment_to_PlayerFragment);
     }
 }
