@@ -1,20 +1,14 @@
 package is.hi.hbv601g.podypus;
 
-import android.content.Context;
-import android.media.MediaPlayer;
-import android.provider.MediaStore;
-import android.widget.Button;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import is.hi.hbv601g.podypus.entities.Episode;
 import is.hi.hbv601g.podypus.entities.SearchResult;
-import is.hi.hbv601g.podypus.ui.player.PlayActivity;
 
 public class MainActivityViewModel extends ViewModel {
-    //MutanleLiveData variables
+    //MutableLiveData variables
     public MutableLiveData<Boolean> authenticated;
 
     public MutableLiveData<SearchResult> searchResult;

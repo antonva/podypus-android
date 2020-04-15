@@ -1,11 +1,9 @@
 package is.hi.hbv601g.podypus.ui.player;
 
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +40,7 @@ public class PlayerFragment extends Fragment {
     //Fragment view opener.
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+        //Fragment variables
         playerViewModel = new ViewModelProvider(requireActivity()).get(PlayerViewModel.class);
         model = new ViewModelProvider(requireActivity()).get(MainActivityViewModel.class);
         View root = inflater.inflate(R.layout.fragment_player, container, false);
@@ -91,9 +90,10 @@ public class PlayerFragment extends Fragment {
             }
         };
 
-        player = PlayActivity.getInstance(preparedHandler); //Player instance
+        //Player instance
+        player = PlayActivity.getInstance(preparedHandler);
 
-        //Currently only local
+        //Episode update observer, updates episodes when they change in the player
         model.currentEpisode.observe(getViewLifecycleOwner(), new Observer<Episode>() {
             @Override
             public void onChanged(Episode episode) {
@@ -129,7 +129,6 @@ public class PlayerFragment extends Fragment {
         playStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Toast.makeText(getActivity(), "PLaying or stopping dunno", Toast.LENGTH_SHORT).show();
                 player.stopStartFunction(playStop);
             }
         });
@@ -139,12 +138,11 @@ public class PlayerFragment extends Fragment {
         stop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Toast.makeText(getActivity(), "Stopping the audio and quiting", Toast.LENGTH_SHORT).show();
                 player.quitPlayback();
             }
         });
 
-        //Buttons for the forward and rewind buttons
+        //Forward button
         final Button forward = (Button)root.findViewById(R.id.buttonForward);
         forward.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -155,6 +153,7 @@ public class PlayerFragment extends Fragment {
             }
         });
 
+        //Backward button
         final Button backward = (Button)root.findViewById(R.id.buttonReplay);
         backward.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -196,6 +195,7 @@ public class PlayerFragment extends Fragment {
             }
         }).start();
 
+        //Seekbar update listener
         int duration = player.getDuration();
         String ltd = LocalTime.ofSecondOfDay(duration/1000).toString();
         totalTime.setText(ltd);

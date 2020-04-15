@@ -67,8 +67,6 @@ public class PodcastsFragment extends Fragment implements ChannelAdapter.OnChann
         mAdapter = new ChannelAdapter(myDataset, this);
         recyclerView.setAdapter(mAdapter);
 
-
-
         SharedPreferences sp = getActivity().getPreferences(Context.MODE_PRIVATE);
         String user = sp.getString("username", "demouser");
         model.isAuthenticated().observe(getViewLifecycleOwner(), authenticated -> {
