@@ -153,6 +153,7 @@ public class SearchFragment extends Fragment implements View.OnClickListener {
                         });
                     }
                     Log.println(Log.INFO, "Search", String.valueOf(response.code()));
+                    response.close();
                 }
             });
         } catch (JSONException | IOException e) {

@@ -1,26 +1,36 @@
 package is.hi.hbv601g.podypus;
 
+import android.content.Context;
+import android.media.MediaPlayer;
+import android.provider.MediaStore;
+import android.widget.Button;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import is.hi.hbv601g.podypus.entities.Episode;
 import is.hi.hbv601g.podypus.entities.SearchResult;
+import is.hi.hbv601g.podypus.ui.player.PlayActivity;
 
 public class MainActivityViewModel extends ViewModel {
+    //MutanleLiveData variables
     public MutableLiveData<Boolean> authenticated;
 
     public MutableLiveData<SearchResult> searchResult = new MutableLiveData<>();
 
     public MutableLiveData<String> username = new MutableLiveData<>();
 
-    public MutableLiveData<String> episodeUrl = new MutableLiveData<>();
+    public MutableLiveData<Episode> currentEpisode = new MutableLiveData<>();
     public MutableLiveData<Long> channelId = new MutableLiveData<>();
 
-    //episodeUrl operations
-    public void setEpisodeUrl(String url){ episodeUrl.postValue(url); }
+    public MutableLiveData<Integer> playerTime = new MutableLiveData<Integer>();
 
-    public String getEpisodeUrl(){
-        return episodeUrl.getValue();
+    //episodeUrl operations
+    public void setCurrentEpisode(Episode episode){ this.currentEpisode.postValue(episode); }
+
+    public LiveData<Episode> getCurrentEpisode(){
+        return currentEpisode;
     }
 
     //channelId operations
@@ -41,6 +51,16 @@ public class MainActivityViewModel extends ViewModel {
         this.authenticated.setValue(b);
     }
 
+    //PlayerTimeKeeping operations
+    public void setPlayerTime(int time){
+        this.playerTime.setValue(time);
+    }
+
+    public Integer getPlayerTime(){
+        return playerTime.getValue();
+    }
+
+    //Username operarions
     public String getUsername() {
         return username.getValue();
     }
@@ -49,6 +69,7 @@ public class MainActivityViewModel extends ViewModel {
         this.username.postValue(username);
     }
 
+<<<<<<< HEAD
     public SearchResult getSearchResult() {
         return searchResult.getValue();
     }
@@ -56,5 +77,7 @@ public class MainActivityViewModel extends ViewModel {
     public void setSearchResult(SearchResult result) {
         this.searchResult.postValue(result);
     }
+=======
+>>>>>>> 5f51550fd4755fc85d03617019edd38c74c82355
 }
 

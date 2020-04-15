@@ -1,47 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:gravity="center_horizontal">
-        <TextView
-            android:id="@+id/text_player"
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
+            android:layout_height="347dp">
+
+            <ImageView
+                android:id="@+id/artcover"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                android:src="@drawable/placeholderplayer"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.419" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <TextView
+            android:id="@+id/player_title"
+            android:layout_width="429dp"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
+            android:text="Podcast Title"
             android:textAlignment="center"
-            android:textSize="20sp"/>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/placeholderplayer"
-            android:layout_marginTop="60dp"
-            android:id="@+id/artcover"/>
+            android:textSize="20sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/currentTime"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"
+            android:textAlignment="center" />
+
         <SeekBar
             android:id="@+id/timeelapsed"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"/>
+            android:layout_width="270dp"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/totalTime"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:textAlignment="center" />
+    </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:layout_marginTop="30dp"
-            android:gravity="center">
+            android:gravity="center"
+            android:orientation="horizontal">
+
             <Button
-                android:background="@drawable/play"
+                android:id="@+id/buttonReplay"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginRight="60dp"
+                android:background="@drawable/round_replay_10_black_48" />
+
+            <Button
                 android:id="@+id/buttonPlayStop"
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:layout_marginRight="120dp"/>
+                android:layout_marginRight="60dp"
+                android:background="@drawable/round_pause_black_48" />
+
             <Button
-                android:background="@drawable/stop"
-                android:id="@+id/buttonQuit"
+                android:id="@+id/buttonForward"
                 android:layout_width="60dp"
-                android:layout_height="60dp"/>
+                android:layout_height="60dp"
+                android:background="@drawable/round_forward_10_black_48" />
         </LinearLayout>
+
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

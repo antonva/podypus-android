@@ -43,7 +43,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.SearchViewHold
     public static class SearchViewHolder extends RecyclerView.ViewHolder {
         public TextView textView;
         public ImageView imageView;
-        static Button subscribeButton;
+        public Button subscribeButton;
 
         public SearchViewHolder(View v) {
             super(v);

@@ -101,6 +101,7 @@ public class PodcastsFragment extends Fragment implements ChannelAdapter.OnChann
                             });
                         }
                         Log.println(Log.INFO, "Podcasts", String.valueOf(response.code()));
+                        response.close();
                     }
                 });
             } catch (JSONException e) {
