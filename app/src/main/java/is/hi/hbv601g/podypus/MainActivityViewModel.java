@@ -69,7 +69,6 @@ public class MainActivityViewModel extends ViewModel {
         this.username.postValue(username);
     }
 
-<<<<<<< HEAD
     public SearchResult getSearchResult() {
         return searchResult.getValue();
     }
@@ -77,7 +76,6 @@ public class MainActivityViewModel extends ViewModel {
     public void setSearchResult(SearchResult result) {
         this.searchResult.postValue(result);
     }
-=======
->>>>>>> 5f51550fd4755fc85d03617019edd38c74c82355
+
 }
 
