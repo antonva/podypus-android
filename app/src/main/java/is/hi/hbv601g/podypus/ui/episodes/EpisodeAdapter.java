@@ -1,5 +1,6 @@
 package is.hi.hbv601g.podypus.ui.episodes;
 
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.time.Duration;
@@ -58,6 +60,7 @@ public class EpisodeAdapter extends RecyclerView.Adapter<EpisodeAdapter.EpisodeV
     @Override
     public void onBindViewHolder(@NonNull EpisodeViewHolder holder, int position) {
         Episode e = mDataset.get(position);
+        if(e.played){holder.titleView.setTextColor(Color.parseColor("#a1e3e9")); }
         holder.titleView.setText(e.title);
         String t = LocalTime.ofSecondOfDay((long) e.playbackPos).toString();
         holder.timeView.setText(t);
