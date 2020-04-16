@@ -60,7 +60,10 @@ public class EpisodeAdapter extends RecyclerView.Adapter<EpisodeAdapter.EpisodeV
     @Override
     public void onBindViewHolder(@NonNull EpisodeViewHolder holder, int position) {
         Episode e = mDataset.get(position);
-        if(e.played){holder.titleView.setTextColor(Color.parseColor("#a1e3e9")); }
+        if(e.played) {
+            holder.titleView.setTextColor(Color.parseColor("#C0C0C0"));
+            holder.timeView.setTextColor(Color.parseColor("#C0C0C0"));
+        }
         holder.titleView.setText(e.title);
         String t = LocalTime.ofSecondOfDay((long) e.playbackPos).toString();
         holder.timeView.setText(t);
