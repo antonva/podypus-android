@@ -3,7 +3,7 @@
 ##Android app for the Podypus podcast service - HBV601G @ University of Iceland<br>
 
 ### A podcast player
-This is a group project created for HBV501G Software project 2<br>
+This is a group project created for HBV601G Software project 2<br>
 
 ## Contributing
 The group uses Android studio Idea for development, Java and web dependencies are handled via REST API.<br>
