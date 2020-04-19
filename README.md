@@ -1,5 +1,7 @@
 # podypus-android
+
 ##Android app for the Podypus podcast service - HBV601G @ University of Iceland<br>
+
 ### A podcast player
 This is a group project created for HBV501G Software project 2<br>
 
